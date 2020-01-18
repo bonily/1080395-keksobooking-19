@@ -3,7 +3,7 @@
 * 
 Студент: [Валентина Пашкова](https://up.htmlacademy.ru/javascript/19/user/1080395).
 * 
-Наставник: Сергей Буртылёв id3341 .
+Наставник: [Сергей Буртылёв] (https://htmlacademy.ru/profile/id3341) .
 
 ---
 
