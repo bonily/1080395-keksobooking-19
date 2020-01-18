@@ -1,7 +1,9 @@
-# Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
+﻿# Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Валентина Пашкова](https://up.htmlacademy.ru/javascript/19/user/1080395).
-* Наставник: `Неизвестно`.
+* 
+Студент: [Валентина Пашкова](https://up.htmlacademy.ru/javascript/19/user/1080395).
+* 
+Наставник: Сергей Буртылёв id3341 .
 
 ---
 
