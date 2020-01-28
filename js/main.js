@@ -1,71 +1,78 @@
 'use strict';
 
-var numbersArray = [1, 2, 3, 4, 5, 6, 7, 8];
-var typeArray = ['palace', 'flat', 'house', 'bungalo'];
-var checkArray = ['12:30', '13:00', '14:00'];
-var featuresArray = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photosArray = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var objectsArray = createArray();
+var number = 8;
+var types = ['palace', 'flat', 'house', 'bungalo'];
+var checkTimes = ['12:30', '13:00', '14:00'];
+var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var ads = createAds();
 var map = document.querySelector('.map');
 var pinsListElement = document.querySelector('.map__pins');
 var pinsTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+var pinsList = createPinsList(ads);
 
 map.classList.remove('map--faded');
 
-function getRandomFloat(min, max) {
+function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getRandomArray(array) {
-  var swapLength = getRandomFloat(1, array.length);
-  var randomArray = [];
+  var swapLength = getRandomInteger(1, array.length);
+  var randomResult = [];
   for (var j = 0; j < swapLength; j++) {
-    randomArray.push(array[j]);
+    randomResult.push(array[j]);
   }
-  return randomArray;
+  return randomResult;
 }
 
-function createArray() {
-  var swapArray = [];
-  for (var i = 0; i < numbersArray.length; i++) {
-    swapArray.push(createObject(numbersArray[i], numbersArray[i], getRandomFloat(0, 1200), getRandomFloat(150, 1800), getRandomFloat(0, 10000), typeArray[getRandomFloat(0, 3)], getRandomFloat(1, 5), getRandomFloat(1, 10), checkArray[getRandomFloat(0, 2)], checkArray[getRandomFloat(0, 2)], getRandomArray(featuresArray), numbersArray[i], getRandomArray(photosArray), getRandomFloat(0, 1200), getRandomFloat(130, 650)));
+function createAds() {
+  var result = [];
+  for (var i = 0; i < number; i++) {
+    result.push(createAd(i + 1));
   }
-  return swapArray;
+  return result;
 }
 
-function createObject(avatarNumber, title, addressX, addressY, price, type, rooms, guests, checkin, checkout, features, description, photos, locationX, locationY) {
+function createAd(avatarNumber) {
   return {
-    'author': {
-      'avatar': 'img/avatars/user' + '0' + avatarNumber + '.png'
+    author: {
+      avatar: 'img/avatars/user' + '0' + avatarNumber + '.png'
     },
-    'offer': {
-      'title': 'Объект ' + title,
-      'address': addressX + ',' + addressY,
-      'price': price,
-      'type': type,
-      'rooms': rooms,
-      'guests': guests,
-      'checkin': checkin,
-      'checkout': checkout,
-      'features': features,
-      'description': 'Объект ' + description,
-      'photos': photos
+    offer: {
+      title: 'Объект ' + avatarNumber,
+      address: getRandomInteger(0, 1200) + ',' + getRandomInteger(150, 1800),
+      price: getRandomInteger(0, 10000),
+      type: types[getRandomInteger(0, 3)],
+      rooms: getRandomInteger(1, 5),
+      guests: getRandomInteger(1, 10),
+      checkin: checkTimes[getRandomInteger(0, 2)],
+      checkout: checkTimes[getRandomInteger(0, 2)],
+      features: getRandomArray(features),
+      description: 'Объект ' + avatarNumber,
+      photos: getRandomArray(photos)
     },
 
-    'location': {
-      'x': locationX,
-      'y': locationY
+    location: {
+      x: getRandomInteger(0, 1200),
+      y: getRandomInteger(130, 650)
     }
   };
 }
 
-for (var r = 0; r < 8; r++) {
-  var pinsElement = pinsTemplate.cloneNode(true);
-  pinsListElement.appendChild(pinsElement);
-  pinsElement.querySelector('img').src = objectsArray[r].author.avatar;
-  pinsElement.querySelector('img').alt = objectsArray[r].offer.title;
-  pinsElement.style.left = objectsArray[r].location.x + 25 + 'px';
-  pinsElement.style.top = objectsArray[r].location.y - 70 + 'px';
+function createPinsList(adsList) {
+  return adsList.map(function createPin(obj) {
+    var pinsElement = pinsTemplate.cloneNode(true);
+    pinsElement.querySelector('img').src = obj.author.avatar;
+    pinsElement.querySelector('img').alt = obj.offer.title;
+    pinsElement.style.left = obj.location.x + 25 + 'px';
+    pinsElement.style.top = obj.location.y - 70 + 'px';
+    return pinsElement;
+  });
+}
+
+for (var i = 0; i < pinsList.length; i++) {
+  pinsListElement.appendChild(pinsList[i]);
 }
