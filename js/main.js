@@ -62,17 +62,25 @@ function createAd(avatarNumber) {
   };
 }
 
-function createPinsList(adsList) {
-  return adsList.map(function createPin(obj) {
-    var pinsElement = pinsTemplate.cloneNode(true);
-    pinsElement.querySelector('img').src = obj.author.avatar;
-    pinsElement.querySelector('img').alt = obj.offer.title;
-    pinsElement.style.left = obj.location.x + 25 + 'px';
-    pinsElement.style.top = obj.location.y - 70 + 'px';
-    return pinsElement;
-  });
+function createPinsList(pins) {
+  return pins.map(createPin);
 }
 
-for (var i = 0; i < pinsList.length; i++) {
-  pinsListElement.appendChild(pinsList[i]);
+function createPin(obj) {
+  var pinsElement = pinsTemplate.cloneNode(true);
+  pinsElement.querySelector('img').src = obj.author.avatar;
+  pinsElement.querySelector('img').alt = obj.offer.title;
+  pinsElement.style.left = obj.location.x + 25 + 'px';
+  pinsElement.style.top = obj.location.y - 70 + 'px';
+  return pinsElement;
 }
+
+function renderPins() {
+  var pinsContainer = document.createDocumentFragment();
+  for (var i = 0; i < pinsList.length; i++) {
+    pinsContainer.appendChild(pinsList[i]);
+  }
+  return pinsContainer;
+}
+
+pinsListElement.appendChild(renderPins());
