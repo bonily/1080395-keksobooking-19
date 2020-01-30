@@ -111,28 +111,15 @@ function createAdCard() {
   }
   adCard.querySelector('.popup__text--capacity').textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.rooms + ' гостей';
   adCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
+
+  var featuresList = adCard.querySelector('.popup__features');
+  featuresList.innerHTML = '';
+
   for (var i = 0; i < currentAd.offer.features.length; i++) {
     var currentFearureName = createFullFeatureName(currentAd.offer.features[i]);
-    switch (currentFearureName) {
-      case 'popup__feature--wifi':
-        adCard.querySelector('.popup__feature--wifi').textContent = 'Wi-Fi';
-        break;
-      case 'popup__feature--dishwasher':
-        adCard.querySelector('.popup__feature--dishwasher').textContent = 'Посудомоечная машина';
-        break;
-      case 'popup__feature--parking':
-        adCard.querySelector('.popup__feature--parking').textContent = 'Парковка';
-        break;
-      case 'popup__feature--washer':
-        adCard.querySelector('.popup__feature--washer').textContent = 'Стиральная машина';
-        break;
-      case 'popup__feature--elevator':
-        adCard.querySelector('.popup__feature--elevator').textContent = 'Лифт';
-        break;
-      case 'popup__feature--conditioner':
-        adCard.querySelector('.popup__feature--conditioner').textContent = 'Кондиционер';
-        break;
-    }
+    var currentFearure = document.createElement('li');
+    currentFearure.className = 'popup__feature' + ' ' + currentFearureName;
+    featuresList.appendChild(currentFearure);
   }
   adCard.querySelector('.popup__description').textContent = currentAd.offer.description;
   var photoPlace = adCard.querySelector('.popup__photos');
@@ -146,7 +133,6 @@ function createAdCard() {
   }
   photoPlace.removeChild(adCard.querySelector('.popup__photo'));
   adCard.querySelector('.popup__avatar').src = currentAd.author.avatar;
-
   return adCard;
 }
 
