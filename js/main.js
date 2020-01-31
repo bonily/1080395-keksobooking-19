@@ -12,11 +12,9 @@ var pinsTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 var pinsList = createPinsList(ads);
-var adTemplate = document.querySelector('#card')
+var cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
-var currentAd = ads[0];
-
 
 map.classList.remove('map--faded');
 
@@ -90,54 +88,65 @@ function renderPins() {
 
 pinsListElement.appendChild(renderPins());
 
-function createAdCard() {
-  var adCard = adTemplate.cloneNode(true);
+function createAdCard(currentAd) {
+  var adCard = cardTemplate.cloneNode(true);
   adCard.querySelector('.popup__title').textContent = currentAd.offer.title;
   adCard.querySelector('.popup__text--address').textContent = currentAd.offer.address;
   adCard.querySelector('.popup__text--price').textContent = currentAd.offer.price + '₽/ночь';
-  switch (currentAd.offer.address) {
-    case 'palace':
-      adCard.querySelector('.popup__type').textContent = 'Дворец';
-      break;
-    case 'flat':
-      adCard.querySelector('.popup__type').textContent = 'Квартира';
-      break;
-    case 'bungalo':
-      adCard.querySelector('.popup__type').textContent = 'Бунгало';
-      break;
-    case 'house':
-      adCard.querySelector('.popup__type').textContent = 'Дом';
-      break;
-  }
+  adCard.querySelector('.popup__type').textContent = getAdType(currentAd);
   adCard.querySelector('.popup__text--capacity').textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.rooms + ' гостей';
   adCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
 
-  var featuresList = adCard.querySelector('.popup__features');
-  featuresList.innerHTML = '';
+  var featuresPlace = adCard.querySelector('.popup__features');
+  featuresPlace.innerHTML = '';
+  featuresPlace.appendChild(createFeaturesList(currentAd.offer.features));
 
-  for (var i = 0; i < currentAd.offer.features.length; i++) {
-    var currentFearureName = createFullFeatureName(currentAd.offer.features[i]);
-    var currentFearure = document.createElement('li');
-    currentFearure.className = 'popup__feature' + ' ' + currentFearureName;
-    featuresList.appendChild(currentFearure);
-  }
   adCard.querySelector('.popup__description').textContent = currentAd.offer.description;
   var photoPlace = adCard.querySelector('.popup__photos');
   var adPhotoTemplate = adCard.querySelector('.popup__photo');
-  for (var j = 0; j < currentAd.offer.photos.length; j++) {
-    var adPhoto = adPhotoTemplate.cloneNode(true);
-    adPhoto.src = currentAd.offer.photos[j];
-    adPhoto.classList.remove('popup__photo');
-    adPhoto.classList.add('popup__photo' + j);
-    photoPlace.appendChild(adPhoto);
-  }
+  photoPlace.appendChild(createPhotosList(currentAd.offer.photos, adPhotoTemplate));
+
   photoPlace.removeChild(adCard.querySelector('.popup__photo'));
   adCard.querySelector('.popup__avatar').src = currentAd.author.avatar;
   return adCard;
 }
 
-function createFullFeatureName(obj) {
-  return 'popup__feature--' + obj;
+function getAdType(ad) {
+  switch (ad.offer.type) {
+    case 'palace':
+      return 'Дворец';
+    case 'flat':
+      return 'Квартира';
+    case 'bungalo':
+      return 'Бунгало';
+    case 'house':
+      return 'Дом';
+    default:
+      return '';
+  }
 }
 
-document.querySelector('.map').insertBefore(createAdCard(), document.querySelector('.map__filters-container'));
+function createFeaturesList(featuresList) {
+  var featuresContainer = document.createDocumentFragment();
+  for (var i = 0; i < featuresList.length; i++) {
+    var currentFearureName = 'popup__feature--' + featuresList[i];
+    var currentFearure = document.createElement('li');
+    currentFearure.className = 'popup__feature' + ' ' + currentFearureName;
+    featuresContainer.appendChild(currentFearure);
+  }
+  return featuresContainer;
+}
+
+function createPhotosList(photosList, photoTemplate) {
+  var photosContainer = document.createDocumentFragment();
+  for (var j = 0; j < photosList.length; j++) {
+    var adPhoto = photoTemplate.cloneNode(true);
+    adPhoto.src = photosList[j];
+    adPhoto.classList.remove('popup__photo');
+    adPhoto.classList.add('popup__photo' + j);
+    photosContainer.appendChild(adPhoto);
+  }
+  return photosContainer;
+}
+
+document.querySelector('.map').insertBefore(createAdCard(ads[0]), document.querySelector('.map__filters-container'));
