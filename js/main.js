@@ -18,8 +18,8 @@ var pinsList = createPinsList(ads);
 var pinMain = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
 var adSubmit = adForm.querySelector('.ad-form__submit');
-// var roomsNumber = adForm.querySelector('#room_number');
-// var capacitySelection = adForm.querySelector('#capacity');
+var roomsNumber = adForm.querySelector('#room_number');
+var capacitySelection = adForm.querySelector('#capacity');
 var formBlocks = adForm.querySelectorAll('fieldset');
 var adressContainer = adForm.querySelector('#address');
 
@@ -29,36 +29,8 @@ var PIN_MAIN_HEIGTH = 84;
 var ENTER_KEY = 'Enter';
 
 
-adSubmit.addEventListener('click', function (evt) {
-  var roomsNumber = adForm.querySelector('#room_number');
-  var capacitySelection = adForm.querySelector('#capacity');
-  if (!checkRoomsCapacityValue(roomsNumber.value, capacitySelection.value)) {
-    evt.preventDefault();
-    console.log(roomsNumber.value);
-    roomsNumber.setCustomValidity('жизнь боль');
-    alert('ghfd');
-
-  }
-});
-
-function checkRoomsCapacityValue(roomsValue, capacityValue) {
-  if (roomsValue === '1' && capacityValue === '1') {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-
-// roomsNumber.addEventListener('change', function (evt) {
-//   var roomsValue = evt.target.value;
-// if ( roomsValue === '1') {
-//   console.log('fghjkjhg');
-// }
-// })
-
-//adForm.classList.add('ad-form--disabled');
-//inactiveState(formBlocks);
+adForm.classList.add('ad-form--disabled');
+inactiveState(formBlocks);
 adressContainer.value = getAdress(pinMain);
 
 function inactiveState(blocks) {
@@ -225,3 +197,28 @@ pinsListElement.appendChild(renderPins());
 // }
 //
 // document.querySelector('.map').insertBefore(createAdCard(ads[0]), document.querySelector('.map__filters-container'));
+
+adSubmit.addEventListener('click', function () {
+  if (!checkRoomsCapacityValue(roomsNumber.value, capacitySelection.value)) {
+    roomsNumber.setCustomValidity('Количество комнат ' + '(' + roomsNumber.value + ') ' + 'не подходит для ' + capacitySelection.value + ' гостей');
+  }
+});
+
+function checkRoomsCapacityValue(roomsValue, capacityValue) {
+  if (roomsValue === '1' && capacityValue === '1') {
+    roomsNumber.setCustomValidity('');
+    return true;
+  } else if (roomsValue === '2' && (capacityValue < '3' && capacityValue > '0')) {
+    roomsNumber.setCustomValidity('');
+    return true;
+  } else if (roomsValue === '3' && (capacityValue <= '3' && capacityValue > '0')) {
+    roomsNumber.setCustomValidity('');
+    return true;
+  } else if (roomsValue === '100' && capacityValue === '0') {
+    roomsNumber.setCustomValidity('');
+    return true;
+  } else {
+    roomsNumber.setCustomValidity('Количество комнат ' + '(' + roomsValue + ') ' + 'не подходит для ' + capacityValue + ' гостей');
+    return false;
+  }
+}
