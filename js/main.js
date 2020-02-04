@@ -1,5 +1,11 @@
 'use strict';
 
+var PIN_MAIN_WIDTH = 65;
+var PIN_MAIN_HEIGTH = 65;
+var PIN_MAIN_NIB = 19;
+var ENTER_KEY = 'Enter';
+
+
 var number = 8;
 var types = ['palace', 'flat', 'house', 'bungalo'];
 var checkTimes = ['12:30', '13:00', '14:00'];
@@ -22,34 +28,37 @@ var roomsNumber = adForm.querySelector('#room_number');
 var capacitySelection = adForm.querySelector('#capacity');
 var formBlocks = adForm.querySelectorAll('fieldset');
 var adressContainer = adForm.querySelector('#address');
-
-
-var PIN_MAIN_WIDTH = 65;
-var PIN_MAIN_HEIGTH = 65;
-var PIN_MAIN_NIB = 19;
-var ENTER_KEY = 'Enter';
+var coords = getCoords();
 
 
 adForm.classList.add('ad-form--disabled');
 changeDisabledState(formBlocks, true);
-adressContainer.value = setAdress(false);
+setAdress(coords);
 
 function changeDisabledState(blocks, isItTrue) {
   blocks.forEach(function (item) {
-    if (isItTrue) {
-      item.disabled = true;
-    } else {
-      item.disabled = false;
-    }
+    item.disabled = isItTrue;
   });
 }
 
-function setAdress(itIsActive) {
-  var coords = getCoords();
-  if (itIsActive) {
-    return (coords.x + Math.round(PIN_MAIN_WIDTH / 2)) + ' , ' + (coords.y + PIN_MAIN_HEIGTH + PIN_MAIN_NIB);
+function isMapActive() {
+  if (map.classList.contains('map--faded')) {
+    return false;
   } else {
-    return (coords.x + Math.round(PIN_MAIN_WIDTH / 2)) + ' , ' + (coords.y + Math.round(PIN_MAIN_HEIGTH / 2));
+    return true;
+  }
+}
+console.log(isMapActive());
+/**
+* @param {object} coords
+*/
+
+function setAdress(coord) {
+  adressContainer.value = coord.x + ' , ' + coord.y;
+  if (isMapActive()) {
+    adressContainer.value = coords.x + Math.round(PIN_MAIN_WIDTH / 2) + ' , ' + (coords.y + PIN_MAIN_HEIGTH + PIN_MAIN_NIB);
+  } else {
+    adressContainer.value = coords.x + Math.round(PIN_MAIN_WIDTH / 2) + ' , ' + (coords.y + Math.round(PIN_MAIN_HEIGTH / 2));
   }
 }
 
@@ -60,11 +69,12 @@ function getCoords() {
   };
 }
 
+
 function activatePage() {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   changeDisabledState(formBlocks, false);
-  adressContainer.value = setAdress(true);
+  setAdress(coords);
 }
 
 pinMain.addEventListener('mousedown', function (evt) {
