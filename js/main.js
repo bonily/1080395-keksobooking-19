@@ -28,12 +28,11 @@ var roomsNumber = adForm.querySelector('#room_number');
 var capacitySelection = adForm.querySelector('#capacity');
 var formBlocks = adForm.querySelectorAll('fieldset');
 var adressContainer = adForm.querySelector('#address');
-var coords = getCoords();
 
 
 adForm.classList.add('ad-form--disabled');
 changeDisabledState(formBlocks, true);
-setAdress(coords);
+getAddress(getCoords());
 
 function changeDisabledState(blocks, isItTrue) {
   blocks.forEach(function (item) {
@@ -42,31 +41,30 @@ function changeDisabledState(blocks, isItTrue) {
 }
 
 function isMapActive() {
-  if (map.classList.contains('map--faded')) {
-    return false;
-  } else {
-    return true;
-  }
+  return !map.classList.contains('map--faded');
 }
-console.log(isMapActive());
+
 /**
 * @param {object} coords
 */
 
-function setAdress(coord) {
-  adressContainer.value = coord.x + ' , ' + coord.y;
-  if (isMapActive()) {
-    adressContainer.value = coords.x + Math.round(PIN_MAIN_WIDTH / 2) + ' , ' + (coords.y + PIN_MAIN_HEIGTH + PIN_MAIN_NIB);
-  } else {
-    adressContainer.value = coords.x + Math.round(PIN_MAIN_WIDTH / 2) + ' , ' + (coords.y + Math.round(PIN_MAIN_HEIGTH / 2));
-  }
+function getAddress(coords) {
+  adressContainer.value = coords.x + ' , ' + coords.y;
+
 }
 
 function getCoords() {
-  return {
-    x: parseInt(pinMain.style.left, 10),
-    y: parseInt(pinMain.style.top, 10)
-  };
+  if (isMapActive()) {
+    return {
+      x: parseInt(pinMain.style.left, 10) + Math.round(PIN_MAIN_WIDTH / 2),
+      y: parseInt(pinMain.style.top, 10) + PIN_MAIN_HEIGTH + PIN_MAIN_NIB
+    };
+  } else {
+    return {
+      x: parseInt(pinMain.style.left, 10) + Math.round(PIN_MAIN_WIDTH / 2),
+      y: parseInt(pinMain.style.top, 10) + Math.round(PIN_MAIN_HEIGTH / 2)
+    };
+  }
 }
 
 
@@ -74,7 +72,7 @@ function activatePage() {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   changeDisabledState(formBlocks, false);
-  setAdress(coords);
+  getAddress(getCoords());
 }
 
 pinMain.addEventListener('mousedown', function (evt) {
