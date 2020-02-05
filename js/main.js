@@ -54,17 +54,10 @@ function getAddress(coords) {
 }
 
 function getCoords() {
-  if (isMapActive()) {
-    return {
-      x: parseInt(pinMain.style.left, 10) + Math.round(PIN_MAIN_WIDTH / 2),
-      y: parseInt(pinMain.style.top, 10) + PIN_MAIN_HEIGTH + PIN_MAIN_NIB
-    };
-  } else {
-    return {
-      x: parseInt(pinMain.style.left, 10) + Math.round(PIN_MAIN_WIDTH / 2),
-      y: parseInt(pinMain.style.top, 10) + Math.round(PIN_MAIN_HEIGTH / 2)
-    };
-  }
+  return {
+    x: parseInt(pinMain.style.left, 10) + Math.round(PIN_MAIN_WIDTH / 2),
+    y: parseInt(pinMain.style.top, 10) + (isMapActive() ? PIN_MAIN_HEIGTH + PIN_MAIN_NIB : Math.round(PIN_MAIN_HEIGTH / 2))
+  };
 }
 
 
