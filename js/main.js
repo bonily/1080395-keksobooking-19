@@ -273,10 +273,10 @@ function createPhotosList(photosList, photoTemplate) {
   return photosContainer;
 }
 
-var clickHandler = function () {
+function clickHandler(evt) {
   document.querySelector('.map__card').remove();
-  document.removeEventListener('click', clickHandler);
-};
+  evt.currentTarget.removeEventListener('click', clickHandler);
+}
 
 function deletePinHandlers(ad) {
   var closePopupButton = ad.querySelector('.popup__close');
@@ -285,19 +285,18 @@ function deletePinHandlers(ad) {
   document.addEventListener('keydown', keydownHandler);
 }
 
+function onPinClick(evt) {
+  var currentPinNumber = evt.currentTarget.dataset.number;
+  var currentAdPopup = createAdCard(ads[currentPinNumber]);
+  if (document.querySelector('.map__card') !== null) {
+    document.querySelector('.map__card').remove();
+  }
+  map.insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
+  deletePinHandlers(currentAdPopup);
+}
 
 function setPinHandlers(pin) {
-  pin.addEventListener('click', function () {
-
-    var currentPinNumber = pin.dataset.number;
-    var currentAdPopup = createAdCard(ads[currentPinNumber]);
-    if (document.querySelector('.map__card') !== null) {
-      document.querySelector('.map__card').remove();
-    }
-    map.insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
-    deletePinHandlers(currentAdPopup);
-
-  });
+  pin.addEventListener('click', onPinClick);
 }
 
 adSubmit.addEventListener('click', function () {
