@@ -3,7 +3,6 @@
 var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGTH = 65;
 var PIN_MAIN_NIB = 19;
-var POPAP_AD_HEIGTH = 230;
 var ENTER_KEY = 'Enter';
 var ESC_KEY = 'Escape';
 
@@ -36,6 +35,12 @@ var adHomeType = document.querySelector('#type');
 var adTime = document.querySelector('.ad-form__element--time');
 var adTimeCheckIn = adTime.querySelector('#timein');
 var adTimeCheckOut = adTime.querySelector('#timeout');
+var keydownHandler = function (evt) {
+  if (evt.key === ESC_KEY) {
+    document.querySelector('.map__card').remove(document.querySelector('.map__card'));
+    document.removeEventListener('keydown', keydownHandler);
+  }
+};
 
 adTime.addEventListener('change', function (evt) {
   setTime(evt.target.name, evt.target.value);
@@ -64,11 +69,8 @@ function setMinPrice() {
 }
 
 function setTime(type, time) {
-  if (type === 'timein') {
-    adTimeCheckOut.value = time;
-  } else {
-    adTimeCheckIn.value = time;
-  }
+  var input = type === 'timein' ? adTimeCheckOut : adTimeCheckIn;
+  input.value = time;
 }
 
 adHomeType.addEventListener('change', function () {
@@ -202,7 +204,7 @@ function renderPins() {
   for (var i = 0; i < pinsList.length; i++) {
     pinsList[i].setAttribute('data-number', i);
     pinsContainer.appendChild(pinsList[i]);
-    createPopaptAd(pinsList[i]);
+    setPinHandlers(pinsList[i]);
   }
   return pinsContainer;
 }
@@ -271,32 +273,26 @@ function createPhotosList(photosList, photoTemplate) {
 }
 
 
-function closePopapAd(ad) {
+function deletePinHandlers(ad) {
   var closePopapButton = ad.querySelector('.popup__close');
 
   closePopapButton.addEventListener('click', function () {
-    document.querySelector('.map__card').parentNode.removeChild(document.querySelector('.map__card'));
+    document.querySelector('.map__card').remove(document.querySelector('.map__card'));
   });
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === ESC_KEY) {
-      document.querySelector('.map__card').parentNode.removeChild(document.querySelector('.map__card'));
-    }
-  });
+  document.addEventListener('keydown', keydownHandler);
 }
 
-function createPopaptAd(pin) {
+
+function setPinHandlers(pin) {
   pin.addEventListener('click', function () {
 
     var currentPinNumber = pin.dataset.number;
     var currentAdPopup = createAdCard(ads[currentPinNumber]);
-    currentAdPopup.style.top = pin.style.top - POPAP_AD_HEIGTH / 2;
-    currentAdPopup.style.left = pin.style.left;
     if (document.querySelector('.map__card') !== null) {
-      document.querySelector('.map__card').parentNode.removeChild(document.querySelector('.map__card'));
+      document.querySelector('.map__card').remove(document.querySelector('.map__card'));
     }
     document.querySelector('.map').insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
-    closePopapAd(currentAdPopup);
+    deletePinHandlers(currentAdPopup);
 
   });
 }
