@@ -37,10 +37,11 @@ var adTimeCheckIn = adTime.querySelector('#timein');
 var adTimeCheckOut = adTime.querySelector('#timeout');
 var keydownHandler = function (evt) {
   if (evt.key === ESC_KEY) {
-    document.querySelector('.map__card').remove(document.querySelector('.map__card'));
+    document.querySelector('.map__card').remove();
     document.removeEventListener('keydown', keydownHandler);
   }
 };
+
 
 adTime.addEventListener('change', function (evt) {
   setTime(evt.target.name, evt.target.value);
@@ -272,13 +273,15 @@ function createPhotosList(photosList, photoTemplate) {
   return photosContainer;
 }
 
+var clickHandler = function () {
+  document.querySelector('.map__card').remove();
+  document.removeEventListener('click', clickHandler);
+};
 
 function deletePinHandlers(ad) {
-  var closePopapButton = ad.querySelector('.popup__close');
+  var closePopupButton = ad.querySelector('.popup__close');
 
-  closePopapButton.addEventListener('click', function () {
-    document.querySelector('.map__card').remove(document.querySelector('.map__card'));
-  });
+  closePopupButton.addEventListener('click', clickHandler);
   document.addEventListener('keydown', keydownHandler);
 }
 
@@ -289,9 +292,9 @@ function setPinHandlers(pin) {
     var currentPinNumber = pin.dataset.number;
     var currentAdPopup = createAdCard(ads[currentPinNumber]);
     if (document.querySelector('.map__card') !== null) {
-      document.querySelector('.map__card').remove(document.querySelector('.map__card'));
+      document.querySelector('.map__card').remove();
     }
-    document.querySelector('.map').insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
+    map.insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
     deletePinHandlers(currentAdPopup);
 
   });
