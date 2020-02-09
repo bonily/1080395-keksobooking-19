@@ -37,10 +37,14 @@ var adTimeCheckIn = adTime.querySelector('#timein');
 var adTimeCheckOut = adTime.querySelector('#timeout');
 var keydownHandler = function (evt) {
   if (evt.key === ESC_KEY) {
-    document.querySelector('.map__card').remove();
-    document.removeEventListener('keydown', keydownHandler);
+    removeAd();
   }
 };
+
+function removeAd() {
+  document.querySelector('.map__card').remove();
+  document.removeEventListener('keydown', keydownHandler);
+}
 
 
 adTime.addEventListener('change', function (evt) {
@@ -273,26 +277,26 @@ function createPhotosList(photosList, photoTemplate) {
   return photosContainer;
 }
 
-function clickHandler(evt) {
-  document.querySelector('.map__card').remove();
-  evt.currentTarget.removeEventListener('click', clickHandler);
+
+function addCardHandlers(ad) {
+  var closeAdButton = ad.querySelector('.popup__close');
+
+  closeAdButton.addEventListener('click', removeAd);
+  document.addEventListener('keydown', keydownHandler);
 }
 
-function deletePinHandlers(ad) {
-  var closePopupButton = ad.querySelector('.popup__close');
-
-  closePopupButton.addEventListener('click', clickHandler);
-  document.addEventListener('keydown', keydownHandler);
+function renderCard(adInfo) {
+  var currentAd = createAdCard(adInfo);
+  if (document.querySelector('.map__card') !== null) {
+    document.querySelector('.map__card').remove();
+  }
+  map.insertBefore(currentAd, document.querySelector('.map__filters-container'));
+  addCardHandlers(currentAd);
 }
 
 function onPinClick(evt) {
   var currentPinNumber = evt.currentTarget.dataset.number;
-  var currentAdPopup = createAdCard(ads[currentPinNumber]);
-  if (document.querySelector('.map__card') !== null) {
-    document.querySelector('.map__card').remove();
-  }
-  map.insertBefore(currentAdPopup, document.querySelector('.map__filters-container'));
-  deletePinHandlers(currentAdPopup);
+  renderCard(ads[currentPinNumber]);
 }
 
 function setPinHandlers(pin) {
