@@ -102,18 +102,19 @@
     }
   }
 
-  function activatePage() {
+  function activateForm() {
     adForm.classList.remove('ad-form--disabled');
     changeDisabledState(formBlocks, false);
   }
 
-  function disactivatePage() {
+  function deactivateForm() {
+    adForm.classList.add('ad-form--disabled');
     changeDisabledState(formBlocks, true);
   }
 
   window.form = {
     setAddress: setAddress,
-    activate: activatePage,
-    disactivate: disactivatePage
+    activate: activateForm,
+    deactivate: deactivateForm
   };
 })();

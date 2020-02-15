@@ -3,8 +3,6 @@
 (function () {
 
   var ads = window.data.create();
-  var pinsList = window.pins.get(ads);
-
 
   function activatePage() {
     window.map.activate();
@@ -12,9 +10,9 @@
     window.form.setAddress(window.map.getCoords());
   }
 
-  window.form.disactivate();
-  window.map.disactivate();
-  window.map.renderPins(pinsList, ads);
+  window.form.deactivate();
+  window.map.deactivate();
+  window.map.renderPins(ads);
   window.form.setAddress(window.map.getCoords());
   window.map.setMainPinClick(activatePage);
 

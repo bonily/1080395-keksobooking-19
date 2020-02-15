@@ -25,7 +25,8 @@
     document.addEventListener('keydown', keydownHandler);
   }
 
-  function renderPins(pinsList, ads) { // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
+  function renderPins(ads) { // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
+    var pinsList = window.pins.get(ads);
     var pinsContainer = document.createDocumentFragment();
 
     for (var i = 0; i < pinsList.length; i++) {
@@ -71,7 +72,7 @@
     return !map.classList.contains('map--faded');
   }
 
-  function disactivatePage() {
+  function deactivatePage() {
     map.classList.add('map--faded');
   }
 
@@ -80,7 +81,7 @@
     renderPins: renderPins,
     getCoords: getCoords,
     activate: activatePage,
-    disactivate: disactivatePage,
+    deactivate: deactivatePage,
     setMainPinClick: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
