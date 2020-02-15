@@ -63,15 +63,25 @@
       y: parseInt(pinMain.style.top, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
     };
   }
+  function activatePage() {
+    map.classList.remove('map--faded');
+  }
 
   function isMapActive() {
     return !map.classList.contains('map--faded');
   }
 
+  function disactivatePage() {
+    map.classList.add('map--faded');
+  }
+
+
   window.map = {
     renderPins: renderPins,
     getCoords: getCoords,
-    mainPinClick: function (cb) {
+    activate: activatePage,
+    disactivate: disactivatePage,
+    setMainPinClick: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
           cb();

@@ -101,10 +101,19 @@
       return false;
     }
   }
-  changeDisabledState(formBlocks, true);
+
+  function activatePage() {
+    adForm.classList.remove('ad-form--disabled');
+    changeDisabledState(formBlocks, false);
+  }
+
+  function disactivatePage() {
+    changeDisabledState(formBlocks, true);
+  }
 
   window.form = {
     setAddress: setAddress,
-    changeState: changeDisabledState
+    activate: activatePage,
+    disactivate: disactivatePage
   };
 })();
