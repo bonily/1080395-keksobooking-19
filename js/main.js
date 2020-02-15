@@ -9,11 +9,14 @@
     window.form.activate();
     window.form.setAddress(window.map.getCoords());
   }
+  function setNewAddress() {
+    window.form.setAddress(window.map.getCoords());
+  }
 
   window.form.deactivate();
   window.map.deactivate();
   window.map.renderPins(ads);
   window.form.setAddress(window.map.getCoords());
-  window.map.setMainPinClick(activatePage);
+  window.map.setMainPinClick(activatePage, setNewAddress);
 
 })();
