@@ -82,10 +82,10 @@
     getCoords: getCoords,
     activate: activatePage,
     deactivate: deactivatePage,
-    setMainPinClick: function (cb, setNewAddress) {
+    moveMainPin: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
-          cb();
+          console.log('тащим');
           var startCoords = {
             x: evt.clientX,
             y: evt.clientY
@@ -104,31 +104,34 @@
               y: moveEvt.clientY
             };
 
-            pinMain.style.top = (function () {
-              var currentY = pinMain.offsetTop - shift.y;
-              switch (true) {
-                case (currentY < 46):
-                  return '46px';
-                case (currentY > 546):
-                  return '546px';
-                default: return currentY + 'px';
-              }
-            })();
 
-            pinMain.style.left = (function () {
+            function getPositionY(newCoordY) {
+              var pinCoords = getCoords(); // функция вернёт координату кончика пина. По нему и ориентируемся, выстраивая ограничения
+              switch (true) {
+                case (pinCoords.y < 130):
+                  return pinMain.offsetTop;
+                case (pinCoords.y > 630):
+                  return pinMain.offsetTop;
+                default: return newCoordY;
+              }
+            }
+
+            function getPositionX(newCoordX) {
               var mapWidth = parseInt(map.offsetWidth, 10);
-              var currentX = pinMain.offsetLeft - shift.x;
               switch (true) {
-                case (currentX > mapWidth):
-                  return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2)) + 'px';
-                case (currentX < 0):
-                  return -Math.round(window.consts.PIN_MAIN_WIDTH / 2) + 'px';
+                case (newCoordX > mapWidth):
+                  return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
+                case (newCoordX < 0):
+                  return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
                 default:
-                  return currentX + 'px';
+                  return newCoordX;
               }
-            })();
+            }
+            pinMain.style.top = getPositionY(pinMain.offsetTop - shift.y) + 'px';
+            pinMain.style.left = getPositionX(pinMain.offsetLeft - shift.x) + 'px';
 
-            setNewAddress();
+
+            cb();
           };
 
           var onMouseUp = function (upEvt) {
@@ -136,8 +139,17 @@
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
           };
+
           document.addEventListener('mousemove', onMouseMove);
           document.addEventListener('mouseup', onMouseUp);
+        }
+      });
+    },
+
+    setMainPinClick: function (cb) {
+      pinMain.addEventListener('mousedown', function (evt) {
+        if (evt.which === 1) {
+          cb();
         }
       });
 
@@ -148,4 +160,6 @@
       });
     }
   };
+
+
 })();

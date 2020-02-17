@@ -17,6 +17,7 @@
   window.map.deactivate();
   window.map.renderPins(ads);
   window.form.setAddress(window.map.getCoords());
-  window.map.setMainPinClick(activatePage, setNewAddress);
+  window.map.setMainPinClick(activatePage);
+  window.map.moveMainPin(setNewAddress);
 
 })();
