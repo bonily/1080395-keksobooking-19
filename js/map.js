@@ -59,11 +59,47 @@
   }
 
   function getCoords() {
+    var pinPosition = {
+      x: parseInt(pinMain.style.left, 10),
+      y: parseInt(pinMain.style.top, 10)
+    };
+    return calcCoordsByPinPosition(pinPosition);
+  }
+
+  function calcCoordsByPinPosition(pinPosition) {
     return {
-      x: parseInt(pinMain.style.left, 10) + Math.round(window.consts.PIN_MAIN_WIDTH / 2),
-      y: parseInt(pinMain.style.top, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
+      x: parseInt(pinPosition.x, 10) + Math.round(window.consts.PIN_MAIN_WIDTH / 2),
+      y: parseInt(pinPosition.y, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
     };
   }
+
+  function getPosition(newCoords) { // принимает новые смещенные значения пина
+    var pinCoords = calcCoordsByPinPosition(newCoords);
+    return {
+      get x() {
+        var mapWidth = parseInt(map.offsetWidth, 10);
+        switch (true) {
+          case (newCoords.x > mapWidth):
+            return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
+          case (newCoords.x < 0):
+            return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
+          default:
+            return newCoords.x;
+        }
+      },
+
+      get y() {
+        switch (true) {
+          case (pinCoords.y < 130):
+            return pinMain.offsetTop;
+          case (pinCoords.y > 630):
+            return pinMain.offsetTop;
+          default: return newCoords.y;
+        }
+      }
+    };
+  }
+
   function activatePage() {
     map.classList.remove('map--faded');
   }
@@ -85,7 +121,6 @@
     moveMainPin: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
-          console.log('тащим');
           var startCoords = {
             x: evt.clientX,
             y: evt.clientY
@@ -105,30 +140,36 @@
             };
 
 
-            function getPositionY(newCoordY) {
-              var pinCoords = getCoords(); // функция вернёт координату кончика пина. По нему и ориентируемся, выстраивая ограничения
-              switch (true) {
-                case (pinCoords.y < 130):
-                  return pinMain.offsetTop;
-                case (pinCoords.y > 630):
-                  return pinMain.offsetTop;
-                default: return newCoordY;
-              }
-            }
+            // function getPositionY(newCoordY) {
+            //   var pinCoords = getCoords(); // функция вернёт координату кончика пина. По нему и ориентируемся, выстраивая ограничения
+            //   switch (true) {
+            //     case (pinCoords.y < 130):
+            //       return pinMain.offsetTop;
+            //     case (pinCoords.y > 630):
+            //       return pinMain.offsetTop;
+            //     default: return newCoordY;
+            //   }
+            // }
 
-            function getPositionX(newCoordX) {
-              var mapWidth = parseInt(map.offsetWidth, 10);
-              switch (true) {
-                case (newCoordX > mapWidth):
-                  return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
-                case (newCoordX < 0):
-                  return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
-                default:
-                  return newCoordX;
-              }
-            }
-            pinMain.style.top = getPositionY(pinMain.offsetTop - shift.y) + 'px';
-            pinMain.style.left = getPositionX(pinMain.offsetLeft - shift.x) + 'px';
+            // function getPositionX(newCoordX) {
+            //   var mapWidth = parseInt(map.offsetWidth, 10);
+            //   switch (true) {
+            //     case (newCoordX > mapWidth):
+            //       return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
+            //     case (newCoordX < 0):
+            //       return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
+            //     default:
+            //       return newCoordX;
+            //   }
+            // }
+
+            var newPinMainCoords = {
+              x: pinMain.offsetLeft - shift.x,
+              y: pinMain.offsetTop - shift.y
+            };
+
+            pinMain.style.top = getPosition(newPinMainCoords).y + 'px';
+            pinMain.style.left = getPosition(newPinMainCoords).x + 'px';
 
 
             cb();
