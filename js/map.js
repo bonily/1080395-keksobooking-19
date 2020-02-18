@@ -59,11 +59,30 @@
   }
 
   function getCoords() {
+    var pinPosition = {
+      x: parseInt(pinMain.style.left, 10),
+      y: parseInt(pinMain.style.top, 10)
+    };
+    return calcCoordsByPinPosition(pinPosition);
+  }
+
+  function calcCoordsByPinPosition(pinPosition) {
     return {
-      x: parseInt(pinMain.style.left, 10) + Math.round(window.consts.PIN_MAIN_WIDTH / 2),
-      y: parseInt(pinMain.style.top, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
+      x: parseInt(pinPosition.x, 10) + Math.round(window.consts.PIN_MAIN_WIDTH / 2),
+      y: parseInt(pinPosition.y, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
     };
   }
+
+  function getPosition(newCoords) { // принимает новые смещенные значения пина
+    var pinCoords = calcCoordsByPinPosition(newCoords);
+    var mapWidth = parseInt(map.offsetWidth, 10);
+
+    return {
+      x: pinCoords.x > mapWidth || pinCoords.x < 0 ? pinMain.offsetLeft : newCoords.x,
+      y: pinCoords.y < window.consts.MAP_HEIGTH_MIN || pinCoords.y > window.consts.MAP_HEIGTH_MAX ? pinMain.offsetTop : newCoords.y
+    };
+  }
+
   function activatePage() {
     map.classList.remove('map--faded');
   }
@@ -82,6 +101,77 @@
     getCoords: getCoords,
     activate: activatePage,
     deactivate: deactivatePage,
+    moveMainPin: function (cb) {
+      pinMain.addEventListener('mousedown', function (evt) {
+        if (evt.which === 1) {
+          var startCoords = {
+            x: evt.clientX,
+            y: evt.clientY
+          };
+
+          var onMouseMove = function (moveEvt) {
+            moveEvt.preventDefault();
+
+            var shift = {
+              x: startCoords.x - moveEvt.clientX,
+              y: startCoords.y - moveEvt.clientY
+            };
+
+            startCoords = {
+              x: moveEvt.clientX,
+              y: moveEvt.clientY
+            };
+
+
+            // function getPositionY(newCoordY) {
+            //   var pinCoords = getCoords(); // функция вернёт координату кончика пина. По нему и ориентируемся, выстраивая ограничения
+            //   switch (true) {
+            //     case (pinCoords.y < 130):
+            //       return pinMain.offsetTop;
+            //     case (pinCoords.y > 630):
+            //       return pinMain.offsetTop;
+            //     default: return newCoordY;
+            //   }
+            // }
+
+            // function getPositionX(newCoordX) {
+            //   var mapWidth = parseInt(map.offsetWidth, 10);
+            //   switch (true) {
+            //     case (newCoordX > mapWidth):
+            //       return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
+            //     case (newCoordX < 0):
+            //       return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
+            //     default:
+            //       return newCoordX;
+            //   }
+            // }
+
+            var newPinMainCoords = {
+              x: pinMain.offsetLeft - shift.x,
+              y: pinMain.offsetTop - shift.y
+            };
+
+            var updatedPositions = getPosition(newPinMainCoords);
+
+            pinMain.style.top = updatedPositions.y + 'px';
+            pinMain.style.left = updatedPositions.x + 'px';
+
+
+            cb();
+          };
+
+          var onMouseUp = function (upEvt) {
+            upEvt.preventDefault();
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+          };
+
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        }
+      });
+    },
+
     setMainPinClick: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
@@ -96,4 +186,6 @@
       });
     }
   };
+
+
 })();
