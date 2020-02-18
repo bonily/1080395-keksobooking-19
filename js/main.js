@@ -2,7 +2,15 @@
 
 (function () {
 
-  var ads = window.data.create();
+  var ads = [];
+
+  function onError() {
+    // console.error(message);
+  }
+
+  function onSuccess(data) {
+    ads = data;
+  }
 
   function activatePage() {
     window.map.activate();
@@ -20,5 +28,6 @@
   window.form.setAddress(window.map.getCoords());
   window.map.setMainPinClick(activatePage);
   window.map.moveMainPin(setNewAddress);
+  window.request('https://js.dump.academy/keksobooking/data', onSuccess, onError);
 
 })();
