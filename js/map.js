@@ -79,7 +79,7 @@
 
     return {
       x: pinCoords.x > mapWidth || pinCoords.x < 0 ? pinMain.offsetLeft : newCoords.x,
-      y: pinCoords.y < 130 || pinCoords.y > 630 ? pinMain.offsetTop : newCoords.y
+      y: pinCoords.y < window.consts.MAP_HEIGTH_MIN || pinCoords.y > window.consts.MAP_HEIGTH_MAX ? pinMain.offsetTop : newCoords.y
     };
   }
 
