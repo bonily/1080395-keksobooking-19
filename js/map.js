@@ -75,28 +75,11 @@
 
   function getPosition(newCoords) { // принимает новые смещенные значения пина
     var pinCoords = calcCoordsByPinPosition(newCoords);
-    return {
-      get x() {
-        var mapWidth = parseInt(map.offsetWidth, 10);
-        switch (true) {
-          case (newCoords.x > mapWidth):
-            return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
-          case (newCoords.x < 0):
-            return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
-          default:
-            return newCoords.x;
-        }
-      },
+    var mapWidth = parseInt(map.offsetWidth, 10);
 
-      get y() {
-        switch (true) {
-          case (pinCoords.y < 130):
-            return pinMain.offsetTop;
-          case (pinCoords.y > 630):
-            return pinMain.offsetTop;
-          default: return newCoords.y;
-        }
-      }
+    return {
+      x: pinCoords.x > mapWidth || pinCoords.x < 0 ? pinMain.offsetLeft : newCoords.x,
+      y: pinCoords.y < 130 || pinCoords.y > 630 ? pinMain.offsetTop : newCoords.y
     };
   }
 
@@ -168,8 +151,10 @@
               y: pinMain.offsetTop - shift.y
             };
 
-            pinMain.style.top = getPosition(newPinMainCoords).y + 'px';
-            pinMain.style.left = getPosition(newPinMainCoords).x + 'px';
+            var updatedPositions = getPosition(newPinMainCoords);
+
+            pinMain.style.top = updatedPositions.y + 'px';
+            pinMain.style.left = updatedPositions.x + 'px';
 
 
             cb();
