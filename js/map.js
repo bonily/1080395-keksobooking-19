@@ -101,6 +101,21 @@
     getCoords: getCoords,
     activate: activatePage,
     deactivate: deactivatePage,
+    setMainPinClick: function (cb) {
+      pinMain.addEventListener('mousedown', function (evt) {
+        if (evt.which === 1) {
+          cb();
+        }
+      },
+      {once: true});
+
+      pinMain.addEventListener('keydown', function (evt) {
+        if (evt.key === window.consts.ENTER_KEY) {
+          cb();
+        }
+      },
+      {once: true});
+    },
     moveMainPin: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
@@ -168,20 +183,6 @@
 
           document.addEventListener('mousemove', onMouseMove);
           document.addEventListener('mouseup', onMouseUp);
-        }
-      });
-    },
-
-    setMainPinClick: function (cb) {
-      pinMain.addEventListener('mousedown', function (evt) {
-        if (evt.which === 1) {
-          cb();
-        }
-      });
-
-      pinMain.addEventListener('keydown', function (evt) {
-        if (evt.key === window.consts.ENTER_KEY) {
-          cb();
         }
       });
     }

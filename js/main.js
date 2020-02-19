@@ -2,14 +2,25 @@
 
 (function () {
 
-  var ads = window.data.create();
+  /**
+ * Будет принимать сообщение об ошибке и передавать его дальше в шаблон???
+ * @param {string} message
+ */
+  function onError() {
+    window.map.setMainPinClick(activatePage);
+  }
 
   function activatePage() {
-    window.map.activate();
-    window.form.activate();
-    window.map.renderPins(ads);
-    window.form.setAddress(window.map.getCoords());
+    window.fetchAds('https://js.dump.academy/keksobooking/data',
+        function (data) {
+          window.map.activate();
+          window.form.activate();
+          window.map.renderPins(data);
+          window.form.setAddress(window.map.getCoords());
+        }
+        , onError);
   }
+
   function setNewAddress() {
     window.form.setAddress(window.map.getCoords());
   }
@@ -20,5 +31,6 @@
   window.form.setAddress(window.map.getCoords());
   window.map.setMainPinClick(activatePage);
   window.map.moveMainPin(setNewAddress);
+
 
 })();

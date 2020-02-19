@@ -9,6 +9,7 @@
     ENTER_KEY: 'Enter',
     ESC_KEY: 'Escape',
     MAP_HEIGTH_MIN: 130,
-    MAP_HEIGTH_MAX: 630
+    MAP_HEIGTH_MAX: 630,
+    SUCCES_STATUS: 200
   };
 })();
