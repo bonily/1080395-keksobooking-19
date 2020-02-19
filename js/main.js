@@ -2,6 +2,10 @@
 
 (function () {
 
+  /**
+ * Будет принимать сообщение об ошибке и передавать его дальше в шаблон???
+ * @param {string} message
+ */
   function onError() {
     // console.error(message);
   }
