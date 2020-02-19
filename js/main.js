@@ -2,22 +2,21 @@
 
 (function () {
 
-  var ads = [];
-
   function onError() {
     // console.error(message);
   }
 
-  function onSuccess(data) {
-    ads = data;
+  function activatePage() {
+    window.fetchAds('https://js.dump.academy/keksobooking/data',
+        function (data) {
+          window.map.activate();
+          window.form.activate();
+          window.map.renderPins(data);
+          window.form.setAddress(window.map.getCoords());
+        }
+        , onError);
   }
 
-  function activatePage() {
-    window.map.activate();
-    window.form.activate();
-    window.map.renderPins(ads);
-    window.form.setAddress(window.map.getCoords());
-  }
   function setNewAddress() {
     window.form.setAddress(window.map.getCoords());
   }
@@ -28,6 +27,6 @@
   window.form.setAddress(window.map.getCoords());
   window.map.setMainPinClick(activatePage);
   window.map.moveMainPin(setNewAddress);
-  window.request('https://js.dump.academy/keksobooking/data', onSuccess, onError);
+
 
 })();
