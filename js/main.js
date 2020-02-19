@@ -7,7 +7,7 @@
  * @param {string} message
  */
   function onError() {
-    // console.error(message);
+    window.map.setMainPinClick(activatePage);
   }
 
   function activatePage() {

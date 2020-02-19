@@ -106,13 +106,15 @@
         if (evt.which === 1) {
           cb();
         }
-      });
+      },
+      {once: true});
 
       pinMain.addEventListener('keydown', function (evt) {
         if (evt.key === window.consts.ENTER_KEY) {
           cb();
         }
-      });
+      },
+      {once: true});
     },
     moveMainPin: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
