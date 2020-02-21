@@ -32,5 +32,30 @@
     xhr.open('GET', url);
     xhr.send();
   }
-  window.fetchAds = fetchAds;
+
+  function uploadForm(url, data, onSuccess, onError) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === window.consts.SUCCES_STATUS) {
+        onSuccess();
+      } else {
+        onError();
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
+
+    xhr.open('POST', url);
+    xhr.send(data);
+  }
+
+  window.request = {
+    fetchAds: fetchAds,
+    uploadForm: uploadForm,
+  };
 })();

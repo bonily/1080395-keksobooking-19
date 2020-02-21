@@ -85,6 +85,7 @@
 
   function activatePage() {
     map.classList.remove('map--faded');
+    // console.log(pinsListElement.children.length)
   }
 
   function isMapActive() {
@@ -95,9 +96,17 @@
     map.classList.add('map--faded');
   }
 
+  function removePins() {
+    var pinsList = pinsListElement.querySelectorAll('.map__pin');
+    for (var i = 1; i < pinsList.length; i++) {
+      pinsListElement.removeChild(pinsListElement.lastChild);
+    }
+  }
+
 
   window.map = {
     renderPins: renderPins,
+    removePins: removePins,
     getCoords: getCoords,
     activate: activatePage,
     deactivate: deactivatePage,
