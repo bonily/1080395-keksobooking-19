@@ -30,17 +30,17 @@
   adHomeType.addEventListener('change', function () {
     setMinPrice();
   });
-  adTitle.addEventListener('invalid', function () {
-    if (adTitle.validity.tooShort) {
-      adTitle.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
-    } else if (adTitle.validity.tooLong) {
-      adTitle.setCustomValidity('Имя не должно превышать 100 символов');
-    } else if (adTitle.validity.valueMissing) {
-      adTitle.setCustomValidity('Обязательное поле');
-    } else {
-      adTitle.setCustomValidity('');
-    }
-  });
+  // adTitle.addEventListener('invalid', function () {
+  //   if (adTitle.validity.tooShort) {
+  //     adTitle.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
+  //   } else if (adTitle.validity.tooLong) {
+  //     adTitle.setCustomValidity('Имя не должно превышать 100 символов');
+  //   } else if (adTitle.validity.valueMissing) {
+  //     adTitle.setCustomValidity('Обязательное поле');
+  //   } else {
+  //     adTitle.setCustomValidity('');
+  //   }
+  // });
 
 
   // adSubmit.addEventListener('click', function (evt) {
