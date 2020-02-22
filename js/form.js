@@ -16,18 +16,6 @@
   var adTime = document.querySelector('.ad-form__element--time');
   var adTimeCheckIn = adTime.querySelector('#timein');
   var adTimeCheckOut = adTime.querySelector('#timeout');
-  var successMessageTemplate = document.querySelector('#success')
-  .content
-  .querySelector('.success');
-  var errorMessageTemplate = document.querySelector('#error')
-  .content
-  .querySelector('.error');
-  var messagePlace = document.querySelector('main');
-  var keydownHandler = function (evt) {
-    if (evt.key === window.consts.ESC_KEY) {
-      messagePlace.removeChild(messagePlace.lastChild);
-    }
-  };
 
 
   adSubmit.addEventListener('click', function () {
@@ -62,36 +50,6 @@
   //   }
   //
   // });
-
-
-  function addSuccessMessage() {
-    var successMessage = successMessageTemplate.cloneNode(true);
-    document.addEventListener('keydown', keydownHandler);
-    document.addEventListener('click', onClickRemoveHandler, true);
-    messagePlace.appendChild(successMessage);
-  }
-
-  function onClickRemoveHandler(evt) {
-    if (evt.target.tagName === 'P') {
-      evt.preventDefault();
-      evt.stopPropagation();
-    } else {
-      messagePlace.removeChild(messagePlace.lastChild);
-    }
-  }
-
-  function onError() {
-    var errorMessage = errorMessageTemplate.cloneNode(true);
-    var errorButton = errorMessage.querySelector('.error__button');
-    errorButton.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      messagePlace.removeChild(messagePlace.lastChild);
-    });
-    document.addEventListener('keydown', keydownHandler);
-    document.addEventListener('click', onClickRemoveHandler, true);
-    messagePlace.appendChild(errorMessage);
-  }
-
 
   function setMinPrice() {
     var currentHomeType = adHomeType.value;
@@ -169,20 +127,22 @@
     setAddress: setAddress,
     activate: activateForm,
     deactivate: deactivateForm,
-    resetForm: function (cb) {
-      adReset.addEventListener('click', function () {
+    getData: function () {
+      return new FormData(adForm);
+    },
+    ad: adForm,
+    setResetButtonClick: function (cb) {
+      adReset.addEventListener('click', function (evt) {
+        evt.preventDefault();
         adForm.reset();
         cb();
       });
     },
-    submitForm: function (cb) {
+
+    setSubmitAdClick: function (cb) {
       adForm.addEventListener('submit', function (evt) {
         evt.preventDefault();
-        window.request.uploadForm('https://js.dump.academy/keksobooking', new FormData(adForm), function () {
-          adForm.reset();
-          cb();
-          addSuccessMessage();
-        }, onError);
+        cb();
       });
     }
   };

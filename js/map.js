@@ -125,7 +125,7 @@
       },
       {once: true});
     },
-    moveMainPin: function (cb) {
+    setMainPinMove: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {
           var startCoords = {
