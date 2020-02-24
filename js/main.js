@@ -33,9 +33,9 @@
 
 
   function deativatePage() {
+    window.map.removeAd();
     window.form.deactivate();
     window.map.deactivate();
-    window.map.removePins();
     window.map.setMainPinClick(activatePage);
     window.form.setAddress(window.map.getCoords());
   }
@@ -44,9 +44,10 @@
     window.form.setAddress(window.map.getCoords());
   }
 
+
   window.form.deactivate();
   window.map.deactivate();
-
+  setNewAddress();
   window.map.setMainPinClick(activatePage);
   window.map.setMainPinMove(setNewAddress);
   window.form.setResetButtonClick(deativatePage);

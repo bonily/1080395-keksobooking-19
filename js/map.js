@@ -6,6 +6,10 @@
   var pinsListElement = document.querySelector('.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
   var adList = [];
+  var pinMainStartCoords = {
+    x: parseInt(pinMain.style.left, 10),
+    y: parseInt(pinMain.style.top, 10)
+  };
   var keydownHandler = function (evt) {
     if (evt.key === window.consts.ESC_KEY) {
       removeAd();
@@ -13,9 +17,11 @@
   };
 
   function removeAd() {
-    document.querySelector('.map__pin--active').classList.remove('map__pin--active');
-    document.querySelector('.map__card').remove();
-    document.removeEventListener('keydown', keydownHandler);
+    if (document.querySelector('.map__card')) {
+      document.querySelector('.map__card').remove();
+      document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      document.removeEventListener('keydown', keydownHandler);
+    }
   }
 
   function addAdHandlers(ad) {
@@ -85,7 +91,6 @@
 
   function activatePage() {
     map.classList.remove('map--faded');
-    // console.log(pinsListElement.children.length)
   }
 
   function isMapActive() {
@@ -94,6 +99,10 @@
 
   function deactivatePage() {
     map.classList.add('map--faded');
+    checkPinMainCoords();
+    if (pinsListElement.querySelectorAll('.map__pin').length > 0) {
+      removePins();
+    }
   }
 
   function removePins() {
@@ -104,9 +113,21 @@
   }
 
 
+  function checkPinMainCoords() {
+    var currentCoords = {
+      x: parseInt(pinMain.style.left, 10),
+      y: parseInt(pinMain.style.top, 10)
+    };
+    if (pinMainStartCoords.x - currentCoords.x !== 0 || pinMainStartCoords.y - currentCoords.y !== 0) {
+      pinMain.style.left = pinMainStartCoords.x + 'px';
+      pinMain.style.top = pinMainStartCoords.y + 'px';
+    }
+  }
+
   window.map = {
     renderPins: renderPins,
-    removePins: removePins,
+    // removePins: removePins,
+    removeAd: removeAd,
     getCoords: getCoords,
     activate: activatePage,
     deactivate: deactivatePage,

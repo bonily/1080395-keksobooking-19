@@ -10,7 +10,7 @@
   var capacitySelection = adForm.querySelector('#capacity');
   var formBlocks = adForm.querySelectorAll('fieldset');
   var adressContainer = adForm.querySelector('#address');
-  var adTitle = document.querySelector('#title');
+  // var adTitle = document.querySelector('#title');
   var adPrice = document.querySelector('#price');
   var adHomeType = document.querySelector('#type');
   var adTime = document.querySelector('.ad-form__element--time');

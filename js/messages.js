@@ -9,42 +9,63 @@
   .content
   .querySelector('.error');
 
-  function keydownHandler(evt) {
+  function successMessagePlace() {
+    return document.querySelector('.success');
+  }
+
+  var onMessageKeydown = function (evt) {
     if (evt.key === window.consts.ESC_KEY) {
-      messagePlace.removeChild(messagePlace.lastChild);
+      successMessagePlace().remove();
+      document.removeEventListener('keydown', onMessageKeydown);
+      document.removeEventListener('click', onMessageClick);
+
     }
-  }
+  };
 
-  function onClickRemoveHandler(evt) {
-    if (evt.target.tagName === 'P') {
-      evt.preventDefault();
-      evt.stopPropagation();
-    } else {
-      messagePlace.removeChild(messagePlace.lastChild);
-    }
-  }
+  var onMessageClick = function () {
+    successMessagePlace().remove();
+    document.removeEventListener('click', onMessageClick);
+    document.removeEventListener('keydown', onMessageKeydown);
+  };
+
+  // function onTextMessageClick(evt) {
+  //   var messageText = document.querySelector('.success__message');
+  //   messageText.addEventListener('click', function () {
+  //     evt.preventDefault();
+  //     evt.stopPropagation();
+  //   });
+  // }
 
 
-  function onErrorButtonClick(errorButton) {
+  function setErrorClickHandler(errorButton) {
     errorButton.addEventListener('click', function (evt) {
       evt.preventDefault();
-      messagePlace.removeChild(messagePlace.lastChild);
+      successMessagePlace().remove();
+    });
+  }
+
+  function setMessageTextHandler() {
+    var messageText = document.querySelector('.success__message');
+    messageText.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      evt.stopImmediatePropagation();
     });
   }
 
   function addSuccessMessage() {
     var successMessage = successMessageTemplate.cloneNode(true);
-    document.addEventListener('keydown', keydownHandler);
-    document.addEventListener('click', onClickRemoveHandler, true);
+    document.addEventListener('keydown', onMessageKeydown);
+    document.addEventListener('click', onMessageClick);
     messagePlace.appendChild(successMessage);
+    setMessageTextHandler();
   }
 
   function addErrorMessage() {
     var errorMessage = errorMessageTemplate.cloneNode(true);
     var errorButton = errorMessage.querySelector('.error__button');
-    onErrorButtonClick(errorButton);
-    document.addEventListener('keydown', keydownHandler);
-    document.addEventListener('click', onClickRemoveHandler, true);
+    setErrorClickHandler(errorButton);
+    document.addEventListener('keydown', onMessageKeydown);
+    document.addEventListener('click', onMessageClick, true);
     messagePlace.appendChild(errorMessage);
   }
   window.messages = {
