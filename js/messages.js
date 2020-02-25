@@ -1,21 +1,21 @@
 'use strict';
 
 (function () {
-  var successMessageTemplate = document.querySelector('#success')
+  var successMessage = document.querySelector('#success')
   .content
   .querySelector('.success');
   var messagePlace = document.querySelector('main');
-  var errorMessageTemplate = document.querySelector('#error')
+  var errorMessage = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-  function successMessagePlace() {
-    return document.querySelector('.success');
+  function messageSpot() {
+    return document.querySelector('.message');
   }
 
   var onMessageKeydown = function (evt) {
     if (evt.key === window.consts.ESC_KEY) {
-      successMessagePlace().remove();
+      messageSpot().remove();
       document.removeEventListener('keydown', onMessageKeydown);
       document.removeEventListener('click', onMessageClick);
 
@@ -23,7 +23,7 @@
   };
 
   var onMessageClick = function () {
-    successMessagePlace().remove();
+    messageSpot().remove();
     document.removeEventListener('click', onMessageClick);
     document.removeEventListener('keydown', onMessageKeydown);
   };
@@ -40,7 +40,7 @@
   function setErrorClickHandler(errorButton) {
     errorButton.addEventListener('click', function (evt) {
       evt.preventDefault();
-      successMessagePlace().remove();
+      messageSpot().remove();
     });
   }
 
@@ -53,7 +53,6 @@
   }
 
   function addSuccessMessage() {
-    var successMessage = successMessageTemplate.cloneNode(true);
     document.addEventListener('keydown', onMessageKeydown);
     document.addEventListener('click', onMessageClick);
     messagePlace.appendChild(successMessage);
@@ -61,7 +60,6 @@
   }
 
   function addErrorMessage() {
-    var errorMessage = errorMessageTemplate.cloneNode(true);
     var errorButton = errorMessage.querySelector('.error__button');
     setErrorClickHandler(errorButton);
     document.addEventListener('keydown', onMessageKeydown);
