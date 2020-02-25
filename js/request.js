@@ -6,9 +6,8 @@
     404: 'Ничего не найдено'
   };
 
-  function fetchAds(url, onSuccess, onError) {
+  function newRequest(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
-
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
@@ -28,9 +27,24 @@
     });
 
     xhr.timeout = 10000; // 10s
+    return xhr;
+  }
+
+  function fetchAds(url, onSuccess, onError) {
+    var xhr = newRequest(onSuccess, onError);
 
     xhr.open('GET', url);
     xhr.send();
   }
-  window.fetchAds = fetchAds;
+
+  function uploadForm(url, data, onSuccess, onError) {
+    var xhr = newRequest(onSuccess, onError);
+    xhr.open('POST', url);
+    xhr.send(data);
+  }
+
+  window.request = {
+    fetchAds: fetchAds,
+    uploadForm: uploadForm,
+  };
 })();
