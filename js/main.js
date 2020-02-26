@@ -15,7 +15,8 @@
         function (data) {
           window.map.activate();
           window.form.activate();
-          window.map.renderPins(data);
+          window.map.renderPins(window.filter.setMapQuantityFilter(data));
+          window.filter.setMapFormFilter(data, window.map.renderPins);
           window.form.setAddress(window.map.getCoords());
         }
         , onError);

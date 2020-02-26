@@ -31,7 +31,11 @@
     document.addEventListener('keydown', keydownHandler);
   }
 
-  function renderPins(ads) { // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
+  function renderPins(ads) {
+    checkActiveAd();
+    removePins();
+    adList = [];
+    // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
     var pinsList = window.pins.get(ads);
     var pinsContainer = document.createDocumentFragment();
 
@@ -48,9 +52,7 @@
     pinsListElement.appendChild(pinsContainer);
   }
 
-  function onPinClick(evt) {
-    var currentPinNumber = evt.currentTarget.dataset.number;
-
+  function checkActiveAd() {
     if (document.querySelector('.map__pin--active') !== null) {
       document.querySelector('.map__pin--active').classList.remove('map__pin--active');
     }
@@ -58,6 +60,11 @@
     if (document.querySelector('.map__card') !== null) {
       document.querySelector('.map__card').remove();
     }
+  }
+
+  function onPinClick(evt) {
+    var currentPinNumber = evt.currentTarget.dataset.number;
+    checkActiveAd();
 
     evt.currentTarget.classList.add('map__pin--active');
     addAdHandlers(adList[currentPinNumber]);
