@@ -16,17 +16,17 @@
     var rooms = mapFilters.querySelector('#housing-rooms');
     var guests = mapFilters.querySelector('#housing-guests');
     var features = mapFilters.querySelectorAll('.map__checkbox:checked');
-    var swapAds = data;
-    swapAds = filterByType(type.value, swapAds);
-    swapAds = filterByPrice(price.value, swapAds);
-    swapAds = filterByRooms(rooms.value, swapAds);
-    swapAds = filterByGuests(guests.value, swapAds);
-    swapAds = filterByFeatures(features, swapAds);
-    if (swapAds.length > window.consts.PINS_QUANTITY - 1) {
-      swapAds = filterByQuantity(swapAds);
+    var result = data;
+    result = filterByType(type.value, result);
+    result = filterByPrice(price.value, result);
+    result = filterByRooms(rooms.value, result);
+    result = filterByGuests(guests.value, result);
+    result = filterByFeatures(features, result);
+    if (result.length > window.consts.PINS_QUANTITY - 1) {
+      result = filterByQuantity(result);
     }
 
-    return swapAds;
+    return result;
   }
 
   function filterByFeatures(features, ads) {
@@ -91,7 +91,7 @@
   }
 
   function filterByQuantity(data) {
-    return data.slice(0, window.consts.PINS_QUANTITY);
+    return data.slice(0, window.consts.PINS_QUANTITY + 1);
   }
 
 
