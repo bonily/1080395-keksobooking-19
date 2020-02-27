@@ -11,7 +11,7 @@
 
   function setChangeCallback(cb) { // принимает массив с сервера из main и cb функцию рендера пинов
     mapFilters.addEventListener('change', function () {
-      cb();
+      window.debounce(cb);
     });
   }
 
