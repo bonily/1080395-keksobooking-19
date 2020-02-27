@@ -36,24 +36,15 @@
   }
 
   function filterByGuests(value, ad) {
-    if (value === 'any') {
-      return true;
-    }
-    return ad.offer.guests === parseInt(value, 10);
+    return value === 'any' || ad.offer.guests === parseInt(value, 10);
   }
 
   function filterByRooms(value, ad) {
-    if (value === 'any') {
-      return true;
-    }
-    return ad.offer.rooms === parseInt(value, 10);
+    return value === 'any' || ad.offer.rooms === parseInt(value, 10);
   }
 
   function filterByType(value, ad) {
-    if (value === 'any') {
-      return true;
-    }
-    return ad.offer.type === value;
+    return value === 'any' || ad.offer.type === value;
   }
 
   function filterByPrice(value, ad) {
@@ -93,9 +84,7 @@
     activate: activateFilters,
     deactivate: deactivateFilters,
     getData: filterByValue,
-    setChangeCallback: function (cb) {
-      setChangeCallback(cb);
-    },
+    setChangeCallback: setChangeCallback
   };
 
 
