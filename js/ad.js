@@ -15,7 +15,7 @@
     ad.querySelector('.popup__text--address').textContent = currentAd.offer.address;
     ad.querySelector('.popup__text--price').textContent = currentAd.offer.price + '₽/ночь';
     ad.querySelector('.popup__type').textContent = getAdType(currentAd);
-    ad.querySelector('.popup__text--capacity').textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.rooms + ' гостей';
+    ad.querySelector('.popup__text--capacity').textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.guests + ' гостей';
     ad.querySelector('.popup__text--time').textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
 
     featuresPlace.innerHTML = '';
@@ -67,6 +67,6 @@
     return photosContainer;
   }
 
-  window.ad = createAd;
+  window.createdAd = createAd;
 
 })();

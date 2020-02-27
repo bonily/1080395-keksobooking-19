@@ -2,91 +2,69 @@
 
 (function () {
   var mapFilters = document.querySelector('.map__filters');
+  var filtersList = mapFilters.querySelectorAll('.map__filter');
+  var type = mapFilters.querySelector('#housing-type');
+  var price = mapFilters.querySelector('#housing-price');
+  var rooms = mapFilters.querySelector('#housing-rooms');
+  var guests = mapFilters.querySelector('#housing-guests');
 
 
-  function filterAds(data, cb) { // принимает массив с сервера из main и cb функцию рендера пинов
+  function setChangeCallback(cb) { // принимает массив с сервера из main и cb функцию рендера пинов
     mapFilters.addEventListener('change', function () {
-      cb(filterByValue(data));
+      cb();
     });
   }
 
   function filterByValue(data) {
-    var type = mapFilters.querySelector('#housing-type');
-    var price = mapFilters.querySelector('#housing-price');
-    var rooms = mapFilters.querySelector('#housing-rooms');
-    var guests = mapFilters.querySelector('#housing-guests');
-    var features = mapFilters.querySelectorAll('.map__checkbox:checked');
-    var result = data;
-    result = filterByType(type.value, result);
-    result = filterByPrice(price.value, result);
-    result = filterByRooms(rooms.value, result);
-    result = filterByGuests(guests.value, result);
-    result = filterByFeatures(features, result);
-    if (result.length > window.consts.PINS_QUANTITY - 1) {
+    var result = data.filter(function (ad) {
+      return filterByType(type.value, ad) && filterByPrice(price.value, ad) && filterByRooms(rooms.value, ad) && filterByGuests(guests.value, ad) && filterByFeatures(ad);
+    });
+    if (result.length > window.consts.PINS_QUANTITY) {
       result = filterByQuantity(result);
     }
-
     return result;
   }
 
-  function filterByFeatures(features, ads) {
-    var adsWithFeature = ads;
+  function filterByFeatures(ad) {
+    var features = mapFilters.querySelectorAll('.map__checkbox:checked');
     var checkedValues = Array.from(features).map(function (el) {
       return el.value;
     });
-    for (var i = 0; i < checkedValues.length; i++) {
-      adsWithFeature = adsWithFeature.filter(function (el) {
-        return el.offer.features.includes(checkedValues[i]);
-      });
-    }
-    return adsWithFeature;
+    return checkedValues.every(function (feature) {
+      return ad.offer.features.includes(feature);
+    });
   }
 
-  function filterByGuests(guests, ads) {
-    if (guests === 'any') {
-      return ads;
-    } else {
-      return ads.filter(function (el) {
-        return el.offer.guests === parseInt(guests, 10);
-      });
+  function filterByGuests(value, ad) {
+    if (value === 'any') {
+      return true;
     }
+    return ad.offer.guests === parseInt(value, 10);
   }
 
-  function filterByRooms(rooms, ads) {
-    if (rooms === 'any') {
-      return ads;
-    } else {
-      return ads.filter(function (el) {
-        return el.offer.rooms === parseInt(rooms, 10);
-      });
+  function filterByRooms(value, ad) {
+    if (value === 'any') {
+      return true;
     }
+    return ad.offer.rooms === parseInt(value, 10);
   }
 
-  function filterByType(type, ads) {
-    if (type === 'any') {
-      return ads;
-    } else {
-      return ads.filter(function (el) {
-        return el.offer.type === type;
-      });
+  function filterByType(value, ad) {
+    if (value === 'any') {
+      return true;
     }
+    return ad.offer.type === value;
   }
 
-  function filterByPrice(value, ads) {
+  function filterByPrice(value, ad) {
     switch (value) {
       case 'middle':
-        return ads.filter(function (el) {
-          return el.offer.price >= 10000 && el.offer.price <= 50000;
-        });
+        return ad.offer.price >= 10000 && ad.offer.price <= 50000;
       case 'low':
-        return ads.filter(function (el) {
-          return el.offer.price < 10000;
-        });
+        return ad.offer.price < 10000;
       case 'high':
-        return ads.filter(function (el) {
-          return el.offer.price > 50000;
-        });
-      default: return ads;
+        return ad.offer.price > 50000;
+      default: return ad;
     }
   }
 
@@ -94,12 +72,30 @@
     return data.slice(0, window.consts.PINS_QUANTITY + 1);
   }
 
+  function changeDisabledState(filters, isItTrue) {
+    filters.forEach(function (item) {
+      item.disabled = isItTrue;
+    });
+  }
+
+  function activateFilters() {
+    changeDisabledState(filtersList, false);
+  }
+
+  function deactivateFilters() {
+    changeDisabledState(filtersList, true);
+  }
+
+  deactivateFilters();
+
 
   window.filter = {
-    setMapFormFilter: function (data, cb) {
-      filterAds(data, cb);
+    activate: activateFilters,
+    deactivate: deactivateFilters,
+    getData: filterByValue,
+    setChangeCallback: function (cb) {
+      setChangeCallback(cb);
     },
-    setMapQuantityFilter: filterByQuantity
   };
 
 

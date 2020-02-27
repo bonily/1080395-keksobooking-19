@@ -5,7 +5,6 @@
   var map = document.querySelector('.map');
   var pinsListElement = document.querySelector('.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
-  var adList = [];
   var pinMainStartCoords = {
     x: parseInt(pinMain.style.left, 10),
     y: parseInt(pinMain.style.top, 10)
@@ -24,6 +23,14 @@
     }
   }
 
+
+  function renderAd(adInfo) {
+    removeAd();
+    var adElement = window.createdAd(adInfo);
+    addAdHandlers(adElement);
+    map.insertBefore(adElement, document.querySelector('.map__filters-container'));
+  }
+
   function addAdHandlers(ad) {
     var closeAdButton = ad.querySelector('.popup__close');
 
@@ -32,43 +39,21 @@
   }
 
   function renderPins(ads) {
-    checkActiveAd();
+    removeAd();
     removePins();
-    adList = [];
     // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
     var pinsList = window.pins.get(ads);
     var pinsContainer = document.createDocumentFragment();
 
-    for (var i = 0; i < pinsList.length; i++) {
+    ads.forEach(function (item, i) {
       var currentPin = pinsList[i];
-      var ad = window.ad(ads[i]); // создаем карточку объявления на основе текущего объекта методом из ad.js
-
-      adList.push(ad); // не придумала способобойти этот костыль, он для функции onPinClick
-      currentPin.setAttribute('data-number', i);
       pinsContainer.appendChild(currentPin);
-
-      currentPin.addEventListener('click', onPinClick);
-    }
+      currentPin.addEventListener('click', function (evt) {
+        renderAd(item);
+        evt.currentTarget.classList.add('map__pin--active');
+      });
+    });
     pinsListElement.appendChild(pinsContainer);
-  }
-
-  function checkActiveAd() {
-    if (document.querySelector('.map__pin--active') !== null) {
-      document.querySelector('.map__pin--active').classList.remove('map__pin--active');
-    }
-
-    if (document.querySelector('.map__card') !== null) {
-      document.querySelector('.map__card').remove();
-    }
-  }
-
-  function onPinClick(evt) {
-    var currentPinNumber = evt.currentTarget.dataset.number;
-    checkActiveAd();
-
-    evt.currentTarget.classList.add('map__pin--active');
-    addAdHandlers(adList[currentPinNumber]);
-    map.insertBefore(adList[currentPinNumber], document.querySelector('.map__filters-container'));
   }
 
   function getCoords() {
@@ -96,7 +81,7 @@
     };
   }
 
-  function activatePage() {
+  function activateMap() {
     map.classList.remove('map--faded');
   }
 
@@ -104,7 +89,7 @@
     return !map.classList.contains('map--faded');
   }
 
-  function deactivatePage() {
+  function deactivateMap() {
     map.classList.add('map--faded');
     checkPinMainCoords();
     if (pinsListElement.querySelectorAll('.map__pin').length > 0) {
@@ -136,8 +121,8 @@
     // removePins: removePins,
     removeAd: removeAd,
     getCoords: getCoords,
-    activate: activatePage,
-    deactivate: deactivatePage,
+    activate: activateMap,
+    deactivate: deactivateMap,
     setMainPinClick: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
         if (evt.which === 1) {

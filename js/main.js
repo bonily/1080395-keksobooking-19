@@ -15,8 +15,13 @@
         function (data) {
           window.map.activate();
           window.form.activate();
-          window.map.renderPins(window.filter.setMapQuantityFilter(data));
-          window.filter.setMapFormFilter(data, window.map.renderPins);
+          window.filter.activate();
+          window.map.renderPins(window.filter.getData(data));
+          window.filter.setChangeCallback(function () {
+            var filteredData = window.filter.getData(data);
+            window.map.renderPins(filteredData);
+          });
+
           window.form.setAddress(window.map.getCoords());
         }
         , onError);
@@ -37,6 +42,7 @@
     window.map.removeAd();
     window.form.deactivate();
     window.map.deactivate();
+    window.filter.deactivate();
     window.map.setMainPinClick(activatePage);
     window.form.setAddress(window.map.getCoords());
   }
