@@ -9,6 +9,10 @@
   function onError() {
     window.map.setMainPinClick(activatePage);
   }
+  var onChangeFilter = function (data) {
+    var filteredData = window.filter.getData(data);
+    window.map.renderPins(filteredData);
+  };
 
   function activatePage() {
     window.request.fetchAds('https://js.dump.academy/keksobooking/data',
@@ -17,10 +21,10 @@
           window.form.activate();
           window.filter.activate();
           window.map.renderPins(window.filter.getData(data));
-          window.filter.setChangeCallback(function () {
-            var filteredData = window.filter.getData(data);
-            window.map.renderPins(filteredData);
-          });
+
+          window.filter.setChangeCallback(window.debounce(function () {
+            onChangeFilter(data);
+          }));
 
           window.form.setAddress(window.map.getCoords());
         }
