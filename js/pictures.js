@@ -1,0 +1,43 @@
+'use strict';
+
+(function () {
+  var avatarFileChooser = document.querySelector('.ad-form-header__input');
+  var avatarPreview = document.querySelector('.ad-form-header__preview img');
+  var adFormPhotoContainer = document.querySelector('.ad-form__photo-container');
+  var adPhotoFileChooser = document.querySelector('.ad-form__upload');
+
+
+  function setFileSelectHandler(evt, preview) {
+    var fileChooser = evt.currentTarget;
+
+    var files = evt.target.files;
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      var fileName = file.name.toLowerCase();
+
+      var matches = window.consts.FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
+      });
+      if (matches) {
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          if (fileChooser === adPhotoFileChooser) {
+            var div = document.createElement('div');
+            div.setAttribute('class', 'ad-form__photo');
+            div.innerHTML = ['<img title="', escape(file.name), '" src="', reader.result, '" width = 70px heigth = 70px />'].join('');
+            adFormPhotoContainer.insertBefore(div, adFormPhotoContainer.lastChild);
+          } else {
+            preview.src = reader.result;
+          }
+        });
+
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  adPhotoFileChooser.addEventListener('change', setFileSelectHandler);
+  avatarFileChooser.addEventListener('change', function (evt) {
+    setFileSelectHandler(evt, avatarPreview);
+  });
+})();
