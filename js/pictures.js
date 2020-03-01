@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var wasteDiv = document.querySelector('.ad-form__photo');
   var avatarFileChooser = document.querySelector('.ad-form-header__input');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var adFormPhotoContainer = document.querySelector('.ad-form__photo-container');
@@ -13,6 +14,7 @@
     var files = evt.target.files;
     for (var i = 0; i < files.length; i++) {
       var file = files[i];
+      var currentIndex = i;
       var fileName = file.name.toLowerCase();
 
       var matches = window.consts.FILE_TYPES.some(function (it) {
@@ -22,10 +24,10 @@
         var reader = new FileReader();
         reader.addEventListener('load', function () {
           if (fileChooser === adPhotoFileChooser) {
-            var div = document.createElement('div');
-            div.setAttribute('class', 'ad-form__photo');
-            div.innerHTML = ['<img title="', escape(file.name), '" src="', reader.result, '" width = 70px heigth = 70px />'].join('');
-            adFormPhotoContainer.insertBefore(div, adFormPhotoContainer.lastChild);
+            if (currentIndex === 0) {
+              wasteDiv.remove();
+            }
+            createNewAdPhoto(file, fileName, reader);
           } else {
             preview.src = reader.result;
           }
@@ -34,6 +36,18 @@
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  function createNewAdPhoto(file, fileName, reader) {
+    var div = document.createElement('div');
+    div.classList.add('ad-form__photo');
+    var img = document.createElement('img');
+    img.src = reader.result;
+    img.title = fileName;
+    img.width = 70;
+    img.height = 70;
+    div.appendChild(img);
+    adFormPhotoContainer.insertBefore(div, adFormPhotoContainer.lastChild);
   }
 
   adPhotoFileChooser.addEventListener('change', setFileSelectHandler);
