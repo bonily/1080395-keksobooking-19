@@ -5,6 +5,7 @@
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var adFormPhotoContainer = document.querySelector('.ad-form__photo-container');
   var adPhotoFileChooser = document.querySelector('.ad-form__upload');
+  var wasteDiv = document.querySelector('.ad-form__photo');
 
 
   function setFileSelectHandler(evt, preview) {
@@ -23,9 +24,9 @@
 
           if (fileChooser === adPhotoFileChooser) {
             if (currentIndex === 0) {
-              removeWasteDiv();
+              wasteDiv.remove();
             }
-            addNewAdPhoto(createNewAdPhoto(file, fileName, reader.result));
+            addNewAdPhotoDiv(createNewAdPhoto(fileName, reader.result));
           } else {
             preview.src = reader.result;
           }
@@ -37,29 +38,30 @@
     });
   }
 
-  function removeWasteDiv() {
-    var wasteDiv = document.querySelector('.ad-form__photo');
-    wasteDiv.remove();
-  }
 
-  function createNewAdPhoto(file, fileName, link) {
-    var div = document.createElement('div');
-    div.classList.add('ad-form__photo');
+  function createNewAdPhoto(fileName, link) {
+    var newPhotoDiv = createNewDiv();
     var img = document.createElement('img');
     img.src = link;
     img.title = fileName;
     img.width = 70;
     img.height = 70;
-    div.appendChild(img);
-    return div;
+    newPhotoDiv.appendChild(img);
+    return newPhotoDiv;
   }
 
-  function addNewAdPhoto(div) {
+  function addNewAdPhotoDiv(div) {
     adFormPhotoContainer.insertBefore(div, adFormPhotoContainer.lastChild);
   }
 
+  function createNewDiv() {
+    var div = document.createElement('div');
+    div.classList.add('ad-form__photo');
+    return div;
+  }
+
   function resetForm() {
-    avatarPreview.scr = '#';
+    avatarPreview.src = 'img/muffin-grey.svg';
     resetAdPhotoContainer();
   }
 
@@ -67,10 +69,9 @@
     adFormPhotoContainer.innerHTML = '';
     adFormPhotoContainer.appendChild(adPhotoFileChooser);
 
-    var div = document.createElement('div');
-    div.classList.add('ad-form__photo');
+    wasteDiv = createNewDiv();
 
-    adFormPhotoContainer.appendChild(div);
+    addNewAdPhotoDiv(wasteDiv);
   }
 
   adPhotoFileChooser.addEventListener('change', setFileSelectHandler);
