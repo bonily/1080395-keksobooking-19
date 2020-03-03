@@ -135,6 +135,7 @@
       adReset.addEventListener('click', function (evt) {
         evt.preventDefault();
         adForm.reset();
+        window.resetPictures();
         cb();
       });
     },
@@ -142,6 +143,7 @@
     setSubmitAdClick: function (cb) {
       adForm.addEventListener('submit', function (evt) {
         evt.preventDefault();
+        window.resetPictures();
         cb();
       });
     }
