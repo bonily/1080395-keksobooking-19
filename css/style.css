@@ -810,6 +810,10 @@ fieldset {
   margin-right: 10px;
   margin-bottom: 10px;
 
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
   width: 70px;
   height: 70px;
 

@@ -11,6 +11,7 @@
     MAP_HEIGTH_MIN: 130,
     MAP_HEIGTH_MAX: 630,
     SUCCES_STATUS: 200,
-    PINS_QUANTITY: 5
+    PINS_QUANTITY: 5,
+    FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png']
   };
 })();
