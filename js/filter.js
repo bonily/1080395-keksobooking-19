@@ -1,16 +1,16 @@
 'use strict';
 
 (function () {
-  var mapFilters = document.querySelector('.map__filters');
-  var filtersList = mapFilters.querySelectorAll('.map__filter');
-  var type = mapFilters.querySelector('#housing-type');
-  var price = mapFilters.querySelector('#housing-price');
-  var rooms = mapFilters.querySelector('#housing-rooms');
-  var guests = mapFilters.querySelector('#housing-guests');
+  var mapFilterForm = document.querySelector('.map__filters');
+  var mapFilters = mapFilterForm.querySelectorAll('.map__filter');
+  var type = mapFilterForm.querySelector('#housing-type');
+  var price = mapFilterForm.querySelector('#housing-price');
+  var rooms = mapFilterForm.querySelector('#housing-rooms');
+  var guests = mapFilterForm.querySelector('#housing-guests');
 
 
   function setChangeCallback(cb) { // принимает массив с сервера из main и cb функцию рендера пинов
-    mapFilters.addEventListener('change', function () {
+    mapFilterForm.addEventListener('change', function () {
       cb();
     });
   }
@@ -26,7 +26,7 @@
   }
 
   function filterByFeatures(ad) {
-    var features = mapFilters.querySelectorAll('.map__checkbox:checked');
+    var features = mapFilterForm.querySelectorAll('.map__checkbox:checked');
     var checkedValues = Array.from(features).map(function (el) {
       return el.value;
     });
@@ -60,21 +60,16 @@
   }
 
   function filterByQuantity(data) {
-    return data.slice(0, window.consts.PINS_QUANTITY + 1);
-  }
-
-  function changeDisabledState(filters, isItTrue) {
-    filters.forEach(function (item) {
-      item.disabled = isItTrue;
-    });
+    return data.slice(0, window.consts.PINS_QUANTITY);
   }
 
   function activateFilters() {
-    changeDisabledState(filtersList, false);
+    window.changeDisabledState(mapFilters, false);
   }
 
   function deactivateFilters() {
-    changeDisabledState(filtersList, true);
+    mapFilterForm.reset();
+    window.changeDisabledState(mapFilters, true);
   }
 
   deactivateFilters();

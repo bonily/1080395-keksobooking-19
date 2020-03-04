@@ -26,14 +26,6 @@
     document.removeEventListener('keydown', onMessageKeydown);
   };
 
-  // function onTextMessageClick(evt) {
-  //   var messageText = document.querySelector('.success__message');
-  //   messageText.addEventListener('click', function () {
-  //     evt.preventDefault();
-  //     evt.stopPropagation();
-  //   });
-  // }
-
 
   function setErrorClickHandler(errorButton) {
     errorButton.addEventListener('click', function (evt) {

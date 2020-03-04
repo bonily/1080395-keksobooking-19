@@ -3,30 +3,36 @@
 (function () {
 
   var map = document.querySelector('.map');
-  var pinsListElement = document.querySelector('.map__pins');
+  var pinPlace = document.querySelector('.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
   var pinMainStartCoords = {
     x: parseInt(pinMain.style.left, 10),
     y: parseInt(pinMain.style.top, 10)
   };
-  var keydownHandler = function (evt) {
+
+  var onKeyDown = function (evt) {
     if (evt.key === window.consts.ESC_KEY) {
       removeAd();
     }
   };
 
+  function onCloseBtnClick() {
+    removeAd();
+  }
+
+
   function removeAd() {
     if (document.querySelector('.map__card')) {
       document.querySelector('.map__card').remove();
       document.querySelector('.map__pin--active').classList.remove('map__pin--active');
-      document.removeEventListener('keydown', keydownHandler);
+      document.removeEventListener('keydown', onKeyDown);
     }
   }
 
 
   function renderAd(adInfo) {
     removeAd();
-    var adElement = window.createdAd(adInfo);
+    var adElement = window.createAd(adInfo);
     addAdHandlers(adElement);
     map.insertBefore(adElement, document.querySelector('.map__filters-container'));
   }
@@ -34,26 +40,28 @@
   function addAdHandlers(ad) {
     var closeAdButton = ad.querySelector('.popup__close');
 
-    closeAdButton.addEventListener('click', removeAd);
-    document.addEventListener('keydown', keydownHandler);
+    closeAdButton.addEventListener('click', onCloseBtnClick);
+    document.addEventListener('keydown', onKeyDown);
   }
 
   function renderPins(ads) {
     removeAd();
     removePins();
     // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
-    var pinsList = window.pins.get(ads);
+    var pinsList = window.createPinsList(ads);
     var pinsContainer = document.createDocumentFragment();
 
     ads.forEach(function (item, i) {
-      var currentPin = pinsList[i];
-      pinsContainer.appendChild(currentPin);
-      currentPin.addEventListener('click', function (evt) {
-        renderAd(item);
-        evt.currentTarget.classList.add('map__pin--active');
-      });
+      if (item.hasOwnProperty('offer')) {
+        var currentPin = pinsList[i];
+        pinsContainer.appendChild(currentPin);
+        currentPin.addEventListener('click', function (evt) {
+          renderAd(item);
+          evt.currentTarget.classList.add('map__pin--active');
+        });
+      }
     });
-    pinsListElement.appendChild(pinsContainer);
+    pinPlace.appendChild(pinsContainer);
   }
 
   function getCoords() {
@@ -92,15 +100,15 @@
   function deactivateMap() {
     map.classList.add('map--faded');
     checkPinMainCoords();
-    if (pinsListElement.querySelectorAll('.map__pin').length > 0) {
+    if (pinPlace.querySelectorAll('.map__pin').length > 0) {
       removePins();
     }
   }
 
   function removePins() {
-    var pinsList = pinsListElement.querySelectorAll('.map__pin');
+    var pinsList = pinPlace.querySelectorAll('.map__pin');
     for (var i = 1; i < pinsList.length; i++) {
-      pinsListElement.removeChild(pinsListElement.lastChild);
+      pinPlace.removeChild(pinPlace.lastChild);
     }
   }
 
@@ -118,7 +126,6 @@
 
   window.map = {
     renderPins: renderPins,
-    // removePins: removePins,
     removeAd: removeAd,
     getCoords: getCoords,
     activate: activateMap,
@@ -158,30 +165,6 @@
               x: moveEvt.clientX,
               y: moveEvt.clientY
             };
-
-
-            // function getPositionY(newCoordY) {
-            //   var pinCoords = getCoords(); // функция вернёт координату кончика пина. По нему и ориентируемся, выстраивая ограничения
-            //   switch (true) {
-            //     case (pinCoords.y < 130):
-            //       return pinMain.offsetTop;
-            //     case (pinCoords.y > 630):
-            //       return pinMain.offsetTop;
-            //     default: return newCoordY;
-            //   }
-            // }
-
-            // function getPositionX(newCoordX) {
-            //   var mapWidth = parseInt(map.offsetWidth, 10);
-            //   switch (true) {
-            //     case (newCoordX > mapWidth):
-            //       return (mapWidth - Math.round(window.consts.PIN_MAIN_WIDTH / 2));
-            //     case (newCoordX < 0):
-            //       return -Math.round(window.consts.PIN_MAIN_WIDTH / 2);
-            //     default:
-            //       return newCoordX;
-            //   }
-            // }
 
             var newPinMainCoords = {
               x: pinMain.offsetLeft - shift.x,

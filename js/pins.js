@@ -18,8 +18,6 @@
     return pinsElement;
   }
 
-  window.pins = {
-    get: createPinsList,
-  };
+  window.createPinsList = createPinsList;
 
 })();

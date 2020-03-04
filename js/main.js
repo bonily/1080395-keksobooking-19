@@ -31,11 +31,11 @@
         , onError);
   }
 
-  function submissionForm() {
+  function submitForm() {
     window.request.uploadForm('https://js.dump.academy/keksobooking',
         window.form.getData(),
         function () {
-          window.form.ad.reset();
+          window.form.getAd.reset();
           deativatePage();
           window.messages.addSuccessMessage();
         }, window.messages.addErrorMessage);
@@ -62,7 +62,7 @@
   window.map.setMainPinClick(activatePage);
   window.map.setMainPinMove(setNewAddress);
   window.form.setResetButtonClick(deativatePage);
-  window.form.setSubmitAdClick(submissionForm);
+  window.form.setSubmitAdClick(submitForm);
 
 
 })();

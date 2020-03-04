@@ -8,7 +8,7 @@
   var wasteDiv = document.querySelector('.ad-form__photo');
 
 
-  function setFileSelectHandler(evt, preview) {
+  function onFilterChange(evt, preview) {
     var fileChooser = evt.currentTarget;
     var files = Array.from(evt.target.files);
 
@@ -51,7 +51,7 @@
   }
 
   function addNewAdPhotoDiv(div) {
-    adFormPhotoContainer.insertBefore(div, adFormPhotoContainer.lastChild);
+    adFormPhotoContainer. appendChild(div);
   }
 
   function createNewDiv() {
@@ -74,10 +74,10 @@
     addNewAdPhotoDiv(wasteDiv);
   }
 
-  adPhotoFileChooser.addEventListener('change', setFileSelectHandler);
+  adPhotoFileChooser.addEventListener('change', onFilterChange);
 
   avatarFileChooser.addEventListener('change', function (evt) {
-    setFileSelectHandler(evt, avatarPreview);
+    onFilterChange(evt, avatarPreview);
   });
 
   window.resetPictures = resetForm;

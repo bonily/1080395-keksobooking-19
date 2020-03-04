@@ -67,6 +67,6 @@
     return photosContainer;
   }
 
-  window.createdAd = createAd;
+  window.createAd = createAd;
 
 })();
