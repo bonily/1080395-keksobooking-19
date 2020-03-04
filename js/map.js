@@ -52,14 +52,12 @@
     var pinsContainer = document.createDocumentFragment();
 
     ads.forEach(function (item, i) {
-      if (item.hasOwnProperty('offer')) {
-        var currentPin = pinsList[i];
-        pinsContainer.appendChild(currentPin);
-        currentPin.addEventListener('click', function (evt) {
-          renderAd(item);
-          evt.currentTarget.classList.add('map__pin--active');
-        });
-      }
+      var currentPin = pinsList[i];
+      pinsContainer.appendChild(currentPin);
+      currentPin.addEventListener('click', function (evt) {
+        renderAd(item);
+        evt.currentTarget.classList.add('map__pin--active');
+      });
     });
     pinPlace.appendChild(pinsContainer);
   }

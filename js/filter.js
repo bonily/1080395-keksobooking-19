@@ -15,9 +15,14 @@
     });
   }
 
+  function filterByProperty(ad) {
+    return ad.hasOwnProperty(window.consts.AD_PROPERTY_TO_CHECK);
+  }
+
+
   function filterByValue(data) {
     var result = data.filter(function (ad) {
-      return filterByType(type.value, ad) && filterByPrice(price.value, ad) && filterByRooms(rooms.value, ad) && filterByGuests(guests.value, ad) && filterByFeatures(ad);
+      return filterByType(type.value, ad) && filterByPrice(price.value, ad) && filterByRooms(rooms.value, ad) && filterByGuests(guests.value, ad) && filterByFeatures(ad) && filterByProperty(ad);
     });
     if (result.length > window.consts.PINS_QUANTITY) {
       result = filterByQuantity(result);

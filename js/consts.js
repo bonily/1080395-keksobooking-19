@@ -13,6 +13,7 @@
     SUCCES_STATUS: 200,
     PINS_QUANTITY: 5,
     FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png'],
-    DEBOUNCE_INTERVAL: 500
+    DEBOUNCE_INTERVAL: 500,
+    AD_PROPERTY_TO_CHECK: 'offer'
   };
 })();
