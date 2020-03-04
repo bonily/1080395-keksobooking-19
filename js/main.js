@@ -17,13 +17,14 @@
   function activatePage() {
     window.request.fetchAds('https://js.dump.academy/keksobooking/data',
         function (data) {
+          var filteredData = window.filter.filterInvalidAds(data);
           window.map.activate();
           window.form.activate();
           window.filter.activate();
-          window.map.renderPins(window.filter.getData(data));
+          window.map.renderPins(window.filter.getData(filteredData));
 
           window.filter.setChangeCallback(window.debounce(function () {
-            onChangeFilter(data);
+            onChangeFilter(filteredData);
           }));
 
           window.form.setAddress(window.map.getCoords());
