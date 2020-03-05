@@ -9,11 +9,10 @@
   var roomNumber = adForm.querySelector('#room_number');
   var capacitySelection = adForm.querySelector('#capacity');
   var formBlocks = adForm.querySelectorAll('fieldset');
-  var adressContainer = adForm.querySelector('#address');
-  // var adTitle = document.querySelector('#title');
-  var adPrice = document.querySelector('#price');
-  var adHomeType = document.querySelector('#type');
-  var adTime = document.querySelector('.ad-form__element--time');
+  var addressContainer = adForm.querySelector('#address');
+  var adPrice = adForm.querySelector('#price');
+  var adHomeType = adForm.querySelector('#type');
+  var adTime = adForm.querySelector('.ad-form__element--time');
   var adTimeCheckIn = adTime.querySelector('#timein');
   var adTimeCheckOut = adTime.querySelector('#timeout');
 
@@ -63,7 +62,7 @@
   */
 
   function setAddress(coords) {
-    adressContainer.value = coords.x + ' , ' + coords.y;
+    addressContainer.value = coords.x + ' , ' + coords.y;
   }
 
 

@@ -10,12 +10,12 @@
   }
 
   function createPin(obj) {
-    var pinsElement = pinsTemplate.cloneNode(true);
-    pinsElement.querySelector('img').src = obj.author.avatar;
-    pinsElement.querySelector('img').alt = obj.offer.title;
-    pinsElement.style.left = obj.location.x + 25 + 'px';
-    pinsElement.style.top = obj.location.y - 70 + 'px';
-    return pinsElement;
+    var pin = pinsTemplate.cloneNode(true);
+    pin.querySelector('img').src = obj.author.avatar;
+    pin.querySelector('img').alt = obj.offer.title;
+    pin.style.left = obj.location.x + window.consts.PIN_AD_WIDTH / 2 + 'px';
+    pin.style.top = obj.location.y - window.consts.PIN_AD_HEIGHT + 'px';
+    return pin;
   }
 
   window.createPinsList = createPinsList;

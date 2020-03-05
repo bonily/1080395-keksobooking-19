@@ -11,20 +11,20 @@
   .querySelector('.success');
 
 
-  var onMessageKeydown = function (evt) {
+  function onMessageKeydown(evt) {
     if (evt.key === window.consts.ESC_KEY) {
       activeMessage.remove();
       document.removeEventListener('keydown', onMessageKeydown);
       document.removeEventListener('click', onMessageClick);
 
     }
-  };
+  }
 
-  var onMessageClick = function () {
+  function onMessageClick() {
     activeMessage.remove();
     document.removeEventListener('click', onMessageClick);
     document.removeEventListener('keydown', onMessageKeydown);
-  };
+  }
 
 
   function setErrorClickHandler(errorButton) {
@@ -35,8 +35,8 @@
   }
 
   function setMessageTextHandler() {
-    var messageText = document.querySelector('.success__message');
-    messageText.addEventListener('click', function (evt) {
+    var text = successMessage.querySelector('.success__message');
+    text.addEventListener('click', function (evt) {
       evt.preventDefault();
       evt.stopImmediatePropagation();
     });

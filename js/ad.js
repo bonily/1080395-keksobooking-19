@@ -6,27 +6,27 @@
   .content
   .querySelector('.map__card');
 
-  function createAd(currentAd) {
-    var ad = adTemplate.cloneNode(true);
-    var featuresPlace = ad.querySelector('.popup__features');
-    var photoPlace = ad.querySelector('.popup__photos');
-    var adPhotoTemplate = ad.querySelector('.popup__photo');
-    ad.querySelector('.popup__title').textContent = currentAd.offer.title;
-    ad.querySelector('.popup__text--address').textContent = currentAd.offer.address;
-    ad.querySelector('.popup__text--price').textContent = currentAd.offer.price + '₽/ночь';
-    ad.querySelector('.popup__type').textContent = getAdType(currentAd);
-    ad.querySelector('.popup__text--capacity').textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.guests + ' гостей';
-    ad.querySelector('.popup__text--time').textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
+  function createAd(adInfo) {
+    var adForMap = adTemplate.cloneNode(true);
+    var featuresPlace = adForMap.querySelector('.popup__features');
+    var photoPlace = adForMap.querySelector('.popup__photos');
+    var adPhotoTemplate = adForMap.querySelector('.popup__photo');
+    adForMap.querySelector('.popup__title').textContent = adInfo.offer.title;
+    adForMap.querySelector('.popup__text--address').textContent = adInfo.offer.address;
+    adForMap.querySelector('.popup__text--price').textContent = adInfo.offer.price + '₽/ночь';
+    adForMap.querySelector('.popup__type').textContent = getAdType(adInfo);
+    adForMap.querySelector('.popup__text--capacity').textContent = adInfo.offer.rooms + ' комнаты для ' + adInfo.offer.guests + ' гостей';
+    adForMap.querySelector('.popup__text--time').textContent = 'Заезд после ' + adInfo.offer.checkin + ' выезд до ' + adInfo.offer.checkout;
 
     featuresPlace.innerHTML = '';
-    featuresPlace.appendChild(createFeaturesList(currentAd.offer.features));
+    featuresPlace.appendChild(createFeaturesList(adInfo.offer.features));
 
-    ad.querySelector('.popup__description').textContent = currentAd.offer.description;
-    photoPlace.appendChild(createPhotosList(currentAd.offer.photos, adPhotoTemplate));
+    adForMap.querySelector('.popup__description').textContent = adInfo.offer.description;
+    photoPlace.appendChild(createPhotosList(adInfo.offer.photos, adPhotoTemplate));
 
-    photoPlace.removeChild(ad.querySelector('.popup__photo'));
-    ad.querySelector('.popup__avatar').src = currentAd.author.avatar;
-    return ad;
+    photoPlace.removeChild(adForMap.querySelector('.popup__photo'));
+    adForMap.querySelector('.popup__avatar').src = adInfo.author.avatar;
+    return adForMap;
   }
 
   function getAdType(ad) {
@@ -44,28 +44,29 @@
     }
   }
 
-  function createFeaturesList(featuresList) {
+  function createFeaturesList(features) {
     var featuresContainer = document.createDocumentFragment();
-    for (var i = 0; i < featuresList.length; i++) {
-      var currentFearureName = 'popup__feature--' + featuresList[i];
-      var currentFearure = document.createElement('li');
-      currentFearure.className = 'popup__feature' + ' ' + currentFearureName;
-      featuresContainer.appendChild(currentFearure);
-    }
+    features.forEach(function (feature) {
+      var currentFeatureName = 'popup__feature--' + feature;
+      var currentFeature = document.createElement('li');
+      currentFeature.className = 'popup__feature' + ' ' + currentFeatureName;
+      featuresContainer.appendChild(currentFeature);
+    });
     return featuresContainer;
   }
 
-  function createPhotosList(photosList, photoTemplate) {
+  function createPhotosList(photos, photoTemplate) {
     var photosContainer = document.createDocumentFragment();
-    for (var j = 0; j < photosList.length; j++) {
+    photos.forEach(function (photo, i) {
       var adPhoto = photoTemplate.cloneNode(true);
-      adPhoto.src = photosList[j];
+      adPhoto.src = photo;
       adPhoto.classList.remove('popup__photo');
-      adPhoto.classList.add('popup__photo' + j);
+      adPhoto.classList.add('popup__photo' + '-' + i);
       photosContainer.appendChild(adPhoto);
-    }
+    });
     return photosContainer;
   }
+
 
   window.createAd = createAd;
 

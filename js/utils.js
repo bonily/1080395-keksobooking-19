@@ -2,9 +2,11 @@
 
 (function () {
 
-  window.changeDisabledState = function (blocks, isItTrue) {
+  function changeDisabledState(blocks, isItTrue) {
     blocks.forEach(function (item) {
       item.disabled = isItTrue;
     });
-  };
+  }
+
+  window.changeDisabledState = changeDisabledState;
 })();

@@ -9,10 +9,11 @@
   function onError() {
     window.map.setMainPinClick(activatePage);
   }
-  var onChangeFilter = function (data) {
+
+  function onChangeFilter(data) {
     var filteredData = window.filter.getData(data);
     window.map.renderPins(filteredData);
-  };
+  }
 
   function activatePage() {
     window.request.fetchAds('https://js.dump.academy/keksobooking/data',

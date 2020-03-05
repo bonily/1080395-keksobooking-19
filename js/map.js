@@ -9,12 +9,17 @@
     x: parseInt(pinMain.style.left, 10),
     y: parseInt(pinMain.style.top, 10)
   };
+  var startCoords;
+  var moveCallBack;
+  var activeAd;
+  var activePin;
+  var pins = [];
 
-  var onKeyDown = function (evt) {
+  function onKeyDown(evt) {
     if (evt.key === window.consts.ESC_KEY) {
       removeAd();
     }
-  };
+  }
 
   function onCloseBtnClick() {
     removeAd();
@@ -22,9 +27,9 @@
 
 
   function removeAd() {
-    if (document.querySelector('.map__card')) {
-      document.querySelector('.map__card').remove();
-      document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    if (activeAd) {
+      activeAd.remove();
+      activePin.classList.remove('map__pin--active');
       document.removeEventListener('keydown', onKeyDown);
     }
   }
@@ -32,9 +37,10 @@
 
   function renderAd(adInfo) {
     removeAd();
-    var adElement = window.createAd(adInfo);
-    addAdHandlers(adElement);
-    map.insertBefore(adElement, document.querySelector('.map__filters-container'));
+    var ad = window.createAd(adInfo);
+    addAdHandlers(ad);
+    activeAd = ad;
+    map.insertBefore(ad, document.querySelector('.map__filters-container'));
   }
 
   function addAdHandlers(ad) {
@@ -48,14 +54,14 @@
     removeAd();
     removePins();
     // ads (в данном случае сгенерированный массив объявлений) приходит из main.js
-    var pinsList = window.createPinsList(ads);
     var pinsContainer = document.createDocumentFragment();
-
+    pins = window.createPinsList(ads);
     ads.forEach(function (item, i) {
-      var currentPin = pinsList[i];
+      var currentPin = pins[i];
       pinsContainer.appendChild(currentPin);
       currentPin.addEventListener('click', function (evt) {
         renderAd(item);
+        activePin = evt.currentTarget;
         evt.currentTarget.classList.add('map__pin--active');
       });
     });
@@ -73,7 +79,7 @@
   function calcCoordsByPinPosition(pinPosition) {
     return {
       x: parseInt(pinPosition.x, 10) + Math.round(window.consts.PIN_MAIN_WIDTH / 2),
-      y: parseInt(pinPosition.y, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGTH + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGTH / 2))
+      y: parseInt(pinPosition.y, 10) + (isMapActive() ? window.consts.PIN_MAIN_HEIGHT + window.consts.PIN_MAIN_NIB : Math.round(window.consts.PIN_MAIN_HEIGHT / 2))
     };
   }
 
@@ -98,16 +104,16 @@
   function deactivateMap() {
     map.classList.add('map--faded');
     checkPinMainCoords();
-    if (pinPlace.querySelectorAll('.map__pin').length > 0) {
+    if (pins.length > 0) {
       removePins();
     }
   }
 
   function removePins() {
-    var pinsList = pinPlace.querySelectorAll('.map__pin');
-    for (var i = 1; i < pinsList.length; i++) {
+    pins.forEach(function () {
       pinPlace.removeChild(pinPlace.lastChild);
-    }
+    });
+    pins = [];
   }
 
 
@@ -122,6 +128,39 @@
     }
   }
 
+
+  function onMouseUp(upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+
+  function onMouseMove(evt) {
+    evt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - evt.clientX,
+      y: startCoords.y - evt.clientY
+    };
+
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var newPinMainCoords = {
+      x: pinMain.offsetLeft - shift.x,
+      y: pinMain.offsetTop - shift.y
+    };
+
+    var updatedPositions = getPosition(newPinMainCoords);
+
+    pinMain.style.top = updatedPositions.y + 'px';
+    pinMain.style.left = updatedPositions.x + 'px';
+
+    moveCallBack();
+  }
+
   window.map = {
     renderPins: renderPins,
     removeAd: removeAd,
@@ -130,7 +169,7 @@
     deactivate: deactivateMap,
     setMainPinClick: function (cb) {
       pinMain.addEventListener('mousedown', function (evt) {
-        if (evt.which === 1) {
+        if (evt.which === window.consts.LEFT_MOUSE_BUTTON_KEY) {
           cb();
         }
       },
@@ -144,44 +183,12 @@
       {once: true});
     },
     setMainPinMove: function (cb) {
+      moveCallBack = cb;
       pinMain.addEventListener('mousedown', function (evt) {
-        if (evt.which === 1) {
-          var startCoords = {
+        if (evt.which === window.consts.LEFT_MOUSE_BUTTON_KEY) {
+          startCoords = {
             x: evt.clientX,
             y: evt.clientY
-          };
-
-          var onMouseMove = function (moveEvt) {
-            moveEvt.preventDefault();
-
-            var shift = {
-              x: startCoords.x - moveEvt.clientX,
-              y: startCoords.y - moveEvt.clientY
-            };
-
-            startCoords = {
-              x: moveEvt.clientX,
-              y: moveEvt.clientY
-            };
-
-            var newPinMainCoords = {
-              x: pinMain.offsetLeft - shift.x,
-              y: pinMain.offsetTop - shift.y
-            };
-
-            var updatedPositions = getPosition(newPinMainCoords);
-
-            pinMain.style.top = updatedPositions.y + 'px';
-            pinMain.style.left = updatedPositions.x + 'px';
-
-
-            cb();
-          };
-
-          var onMouseUp = function (upEvt) {
-            upEvt.preventDefault();
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
           };
 
           document.addEventListener('mousemove', onMouseMove);

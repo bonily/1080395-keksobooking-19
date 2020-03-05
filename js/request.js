@@ -11,7 +11,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === window.consts.SUCCES_STATUS) {
+      if (xhr.status === window.consts.SUCCESS_STATUS) {
         onSuccess(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + errors[xhr.status]);
