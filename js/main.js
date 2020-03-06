@@ -66,5 +66,4 @@
   window.form.setResetButtonClick(deativatePage);
   window.form.setSubmitAdClick(submitForm);
 
-
 })();
